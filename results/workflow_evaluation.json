@@ -1,0 +1,203 @@
+{
+  "ablations": [
+    {
+      "variant": "原始收支+模型分类",
+      "seconds": 0.4155687000602484,
+      "records": 572,
+      "review_questions": 0,
+      "review_request_rate": 0.0,
+      "unresolved_rate": 0.0,
+      "duplicate_accounting_rate": 0.03671328671328671,
+      "false_merge_rate": 0.0,
+      "automatic_link_precision": 0.0,
+      "automatic_link_count": 0,
+      "auto_link_by_kind": {
+        "退款": {
+          "count": 0,
+          "precision": 0.0
+        },
+        "转账": {
+          "count": 0,
+          "precision": 0.0
+        },
+        "消费": {
+          "count": 0,
+          "precision": 0.0
+        }
+      },
+      "category_modification_rate": 0.05043859649122807,
+      "net_cents": 9715545
+    },
+    {
+      "variant": "匹配但无人工核对",
+      "seconds": 0.476613299921155,
+      "records": 572,
+      "review_questions": 0,
+      "review_request_rate": 0.0,
+      "unresolved_rate": 0.0,
+      "duplicate_accounting_rate": 0.0,
+      "false_merge_rate": 0.0,
+      "automatic_link_precision": 1.0,
+      "automatic_link_count": 82,
+      "auto_link_by_kind": {
+        "退款": {
+          "count": 25,
+          "precision": 1.0
+        },
+        "转账": {
+          "count": 36,
+          "precision": 1.0
+        },
+        "消费": {
+          "count": 21,
+          "precision": 1.0
+        }
+      },
+      "category_modification_rate": 0.05043859649122807,
+      "net_cents": 7071006
+    },
+    {
+      "variant": "完整流程",
+      "seconds": 0.4751341000664979,
+      "records": 572,
+      "review_questions": 50,
+      "review_request_rate": 0.08741258741258741,
+      "unresolved_rate": 0.08741258741258741,
+      "duplicate_accounting_rate": 0.0,
+      "false_merge_rate": 0.0,
+      "automatic_link_precision": 1.0,
+      "automatic_link_count": 82,
+      "auto_link_by_kind": {
+        "退款": {
+          "count": 25,
+          "precision": 1.0
+        },
+        "转账": {
+          "count": 36,
+          "precision": 1.0
+        },
+        "消费": {
+          "count": 21,
+          "precision": 1.0
+        }
+      },
+      "category_modification_rate": 0.05043859649122807,
+      "net_cents": 4199386
+    },
+    {
+      "variant": "关闭数据体检",
+      "seconds": 0.47178809996694326,
+      "records": 572,
+      "review_questions": 50,
+      "review_request_rate": 0.08741258741258741,
+      "unresolved_rate": 0.08741258741258741,
+      "duplicate_accounting_rate": 0.0,
+      "false_merge_rate": 0.0,
+      "automatic_link_precision": 1.0,
+      "automatic_link_count": 82,
+      "auto_link_by_kind": {
+        "退款": {
+          "count": 25,
+          "precision": 1.0
+        },
+        "转账": {
+          "count": 36,
+          "precision": 1.0
+        },
+        "消费": {
+          "count": 21,
+          "precision": 1.0
+        }
+      },
+      "category_modification_rate": 0.05043859649122807,
+      "net_cents": 4199386
+    }
+  ],
+  "simulated_human_feedback": {
+    "note": "使用真值模拟人工反馈，不是用户实测",
+    "records_modified": 23,
+    "category_modification_rate": 0.05043859649122807
+  },
+  "personalization": {
+    "adaptation_count": 18,
+    "holdout_count": 12,
+    "merchant_disjoint": true,
+    "accuracy_before": 0.0,
+    "accuracy_after": 1.0,
+    "predictions_before": [
+      "居住缴费",
+      "生活服务",
+      "娱乐",
+      "其他",
+      "医疗",
+      "居住缴费",
+      "其他",
+      "居住缴费",
+      "居住缴费",
+      "居住缴费",
+      "居住缴费",
+      "其他"
+    ],
+    "predictions_after": [
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育",
+      "教育"
+    ],
+    "note": "新增自习空间这一偏好场景，12个不同商户留出测试，共享同一服务描述，不能泛化为所有新消费"
+  },
+  "quality": {
+    "records": 30,
+    "injected_missing_merchants": 5,
+    "detected": 5,
+    "without_skill_detected": 0,
+    "empty_table": {
+      "rows": 0,
+      "missing": {},
+      "issues": [],
+      "date_range": [],
+      "outgoing_cents": 0,
+      "incoming_cents": 0,
+      "skill": "bill-data-quality/1.0.0",
+      "note": "原始收支合计包含尚未核对的转账与退款，不等于消费净支出"
+    },
+    "note": "独立字段缺失探针，主测试集字段完整时关闭体检不应改变结果"
+  },
+  "ocr": [
+    {
+      "file": "demo_screenshot.png",
+      "records": 3,
+      "expected_records": 3,
+      "amount_exact": 1.0,
+      "time_exact": 1.0,
+      "merchant_exact": 1.0,
+      "errors": 0,
+      "min_confidence": 0.95575,
+      "text": "构造账单测试图 图(非真实支付截图)\n2026-09-08 12:30 青禾面馆 支出 28.00元\n2026-09-08 18:00 城市地铁 支出 6.00元\n2026-09-09 10:20 知行书店 支出 68.00元",
+      "seconds": 2.1902422001585364
+    },
+    {
+      "file": "demo_screenshot_blurred.png",
+      "records": 3,
+      "expected_records": 3,
+      "amount_exact": 1.0,
+      "time_exact": 1.0,
+      "merchant_exact": 1.0,
+      "errors": 0,
+      "min_confidence": 0.94694,
+      "text": "构造账单测试图(非真实支付截图）\n2026-09-0812:30 青禾面馆 支出 28.00元\n2026-09-0818:00 城市地铁 支出6.00元\n2026-09-0910:20知行书店支出68.00元",
+      "seconds": 1.6641733997967094
+    }
+  ],
+  "wrong_auto_links": [],
+  "api_validation": "pending_user_key",
+  "real_data_validation": "pending_user_authorized_sample"
+}

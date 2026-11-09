@@ -1,0 +1,1822 @@
+[
+  {
+    "id": "DEMO0000",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-01T12:00:00",
+    "direction": "支出",
+    "amount": 2800,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0000",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 1
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0001",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-03T01:13:00",
+    "direction": "支出",
+    "amount": 2500,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品",
+    "order_id": "DEMOORDER0001",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 2
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0002",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-04T14:26:00",
+    "direction": "支出",
+    "amount": 800,
+    "merchant": "城市地铁",
+    "description": "地铁乘车",
+    "order_id": "DEMOORDER0002",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 3
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0003",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-06T03:39:00",
+    "direction": "支出",
+    "amount": 8900,
+    "merchant": "星桥超市",
+    "description": "超市日用品",
+    "order_id": "DEMOORDER0003",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 4
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0004",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-07T16:52:00",
+    "direction": "支出",
+    "amount": 3500,
+    "merchant": "小巷洗衣",
+    "description": "洗衣服务",
+    "order_id": "DEMOORDER0004",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 5
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0005",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-09T06:05:00",
+    "direction": "支出",
+    "amount": 6900,
+    "merchant": "知行书店",
+    "description": "教材图书",
+    "order_id": "DEMOORDER0005",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 6
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0006",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-10T19:18:00",
+    "direction": "支出",
+    "amount": 4700,
+    "merchant": "光影影院",
+    "description": "电影门票",
+    "order_id": "DEMOORDER0006",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 7
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0007",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-12T08:31:00",
+    "direction": "支出",
+    "amount": 4500,
+    "merchant": "民生药房",
+    "description": "药店购药",
+    "order_id": "DEMOORDER0007",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 8
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0008",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-13T21:44:00",
+    "direction": "支出",
+    "amount": 7900,
+    "merchant": "城市水务",
+    "description": "自来水费",
+    "order_id": "DEMOORDER0008",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 9
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0009",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-15T10:57:00",
+    "direction": "支出",
+    "amount": 2900,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0009",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 10
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0010",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-17T00:10:00",
+    "direction": "支出",
+    "amount": 2600,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品",
+    "order_id": "DEMOORDER0010",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 11
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0011",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-18T13:23:00",
+    "direction": "支出",
+    "amount": 900,
+    "merchant": "城市地铁",
+    "description": "地铁乘车",
+    "order_id": "DEMOORDER0011",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 12
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0012",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-20T02:36:00",
+    "direction": "支出",
+    "amount": 8600,
+    "merchant": "星桥超市",
+    "description": "超市日用品",
+    "order_id": "DEMOORDER0012",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 13
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0013",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-21T15:49:00",
+    "direction": "支出",
+    "amount": 3600,
+    "merchant": "小巷洗衣",
+    "description": "洗衣服务",
+    "order_id": "DEMOORDER0013",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 14
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0014",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-23T05:02:00",
+    "direction": "支出",
+    "amount": 7000,
+    "merchant": "知行书店",
+    "description": "教材图书",
+    "order_id": "DEMOORDER0014",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 15
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0015",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-24T18:15:00",
+    "direction": "支出",
+    "amount": 4800,
+    "merchant": "光影影院",
+    "description": "电影门票",
+    "order_id": "DEMOORDER0015",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 16
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0016",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-26T07:28:00",
+    "direction": "支出",
+    "amount": 4200,
+    "merchant": "民生药房",
+    "description": "药店购药",
+    "order_id": "DEMOORDER0016",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 17
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0017",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-27T20:41:00",
+    "direction": "支出",
+    "amount": 8000,
+    "merchant": "城市水务",
+    "description": "自来水费",
+    "order_id": "DEMOORDER0017",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 18
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0018",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-07-29T09:54:00",
+    "direction": "支出",
+    "amount": 3000,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0018",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 19
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0019",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-07-30T23:07:00",
+    "direction": "支出",
+    "amount": 2700,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品",
+    "order_id": "DEMOORDER0019",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 20
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0020",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-01T12:20:00",
+    "direction": "支出",
+    "amount": 600,
+    "merchant": "城市地铁",
+    "description": "地铁乘车",
+    "order_id": "DEMOORDER0020",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 21
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0021",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-03T01:33:00",
+    "direction": "支出",
+    "amount": 8700,
+    "merchant": "星桥超市",
+    "description": "超市日用品",
+    "order_id": "DEMOORDER0021",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 22
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0022",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-04T14:46:00",
+    "direction": "支出",
+    "amount": 3700,
+    "merchant": "小巷洗衣",
+    "description": "洗衣服务",
+    "order_id": "DEMOORDER0022",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 23
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0023",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-06T03:59:00",
+    "direction": "支出",
+    "amount": 7100,
+    "merchant": "知行书店",
+    "description": "教材图书",
+    "order_id": "DEMOORDER0023",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 24
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0024",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-07T17:12:00",
+    "direction": "支出",
+    "amount": 4500,
+    "merchant": "光影影院",
+    "description": "电影门票",
+    "order_id": "DEMOORDER0024",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 25
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0025",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-09T06:25:00",
+    "direction": "支出",
+    "amount": 4300,
+    "merchant": "民生药房",
+    "description": "药店购药",
+    "order_id": "DEMOORDER0025",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 26
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0026",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-10T19:38:00",
+    "direction": "支出",
+    "amount": 8100,
+    "merchant": "城市水务",
+    "description": "自来水费",
+    "order_id": "DEMOORDER0026",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 27
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0027",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-12T08:51:00",
+    "direction": "支出",
+    "amount": 3100,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0027",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 28
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0028",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-13T22:04:00",
+    "direction": "支出",
+    "amount": 2400,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品",
+    "order_id": "DEMOORDER0028",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 29
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0029",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-15T11:17:00",
+    "direction": "支出",
+    "amount": 700,
+    "merchant": "城市地铁",
+    "description": "地铁乘车",
+    "order_id": "DEMOORDER0029",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 30
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0030",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-17T00:30:00",
+    "direction": "支出",
+    "amount": 8800,
+    "merchant": "星桥超市",
+    "description": "超市日用品",
+    "order_id": "DEMOORDER0030",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 31
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0031",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-18T13:43:00",
+    "direction": "支出",
+    "amount": 3800,
+    "merchant": "小巷洗衣",
+    "description": "洗衣服务",
+    "order_id": "DEMOORDER0031",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 32
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0032",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-20T02:56:00",
+    "direction": "支出",
+    "amount": 6800,
+    "merchant": "知行书店",
+    "description": "教材图书",
+    "order_id": "DEMOORDER0032",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 33
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0033",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-21T16:09:00",
+    "direction": "支出",
+    "amount": 4600,
+    "merchant": "光影影院",
+    "description": "电影门票",
+    "order_id": "DEMOORDER0033",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 34
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0034",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-23T05:22:00",
+    "direction": "支出",
+    "amount": 4400,
+    "merchant": "民生药房",
+    "description": "药店购药",
+    "order_id": "DEMOORDER0034",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 35
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0035",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-24T18:35:00",
+    "direction": "支出",
+    "amount": 8200,
+    "merchant": "城市水务",
+    "description": "自来水费",
+    "order_id": "DEMOORDER0035",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 36
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0036",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-26T07:48:00",
+    "direction": "支出",
+    "amount": 2800,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0036",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 37
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0037",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-27T21:01:00",
+    "direction": "支出",
+    "amount": 2500,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品",
+    "order_id": "DEMOORDER0037",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 38
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0038",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-08-29T10:14:00",
+    "direction": "支出",
+    "amount": 800,
+    "merchant": "城市地铁",
+    "description": "地铁乘车",
+    "order_id": "DEMOORDER0038",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 39
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0039",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-08-30T23:27:00",
+    "direction": "支出",
+    "amount": 8900,
+    "merchant": "星桥超市",
+    "description": "超市日用品",
+    "order_id": "DEMOORDER0039",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 40
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0040",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-01T12:40:00",
+    "direction": "支出",
+    "amount": 3500,
+    "merchant": "小巷洗衣",
+    "description": "洗衣服务",
+    "order_id": "DEMOORDER0040",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 41
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0041",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-03T01:53:00",
+    "direction": "支出",
+    "amount": 6900,
+    "merchant": "知行书店",
+    "description": "教材图书",
+    "order_id": "DEMOORDER0041",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 42
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0042",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-04T15:06:00",
+    "direction": "支出",
+    "amount": 4700,
+    "merchant": "光影影院",
+    "description": "电影门票",
+    "order_id": "DEMOORDER0042",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 43
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0043",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-06T04:19:00",
+    "direction": "支出",
+    "amount": 4500,
+    "merchant": "民生药房",
+    "description": "药店购药",
+    "order_id": "DEMOORDER0043",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 44
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0044",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-07T17:32:00",
+    "direction": "支出",
+    "amount": 7900,
+    "merchant": "城市水务",
+    "description": "自来水费",
+    "order_id": "DEMOORDER0044",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 45
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0045",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-09T06:45:00",
+    "direction": "支出",
+    "amount": 2900,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0045",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 46
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0046",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-10T19:58:00",
+    "direction": "支出",
+    "amount": 2600,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品",
+    "order_id": "DEMOORDER0046",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 47
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0047",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-12T09:11:00",
+    "direction": "支出",
+    "amount": 900,
+    "merchant": "城市地铁",
+    "description": "地铁乘车",
+    "order_id": "DEMOORDER0047",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 48
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0048",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-13T22:24:00",
+    "direction": "支出",
+    "amount": 8600,
+    "merchant": "星桥超市",
+    "description": "超市日用品",
+    "order_id": "DEMOORDER0048",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 49
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0049",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-15T11:37:00",
+    "direction": "支出",
+    "amount": 3600,
+    "merchant": "小巷洗衣",
+    "description": "洗衣服务",
+    "order_id": "DEMOORDER0049",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 50
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0050",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-17T00:50:00",
+    "direction": "支出",
+    "amount": 7000,
+    "merchant": "知行书店",
+    "description": "教材图书",
+    "order_id": "DEMOORDER0050",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 51
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0051",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-18T14:03:00",
+    "direction": "支出",
+    "amount": 4800,
+    "merchant": "光影影院",
+    "description": "电影门票",
+    "order_id": "DEMOORDER0051",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 52
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0052",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-20T03:16:00",
+    "direction": "支出",
+    "amount": 4200,
+    "merchant": "民生药房",
+    "description": "药店购药",
+    "order_id": "DEMOORDER0052",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 53
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO0053",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-21T16:29:00",
+    "direction": "支出",
+    "amount": 8000,
+    "merchant": "城市水务",
+    "description": "自来水费",
+    "order_id": "DEMOORDER0053",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 54
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-OWN-OUT",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-25T12:30:00",
+    "direction": "支出",
+    "amount": 120000,
+    "merchant": "我的支付宝",
+    "description": "本人账户划转",
+    "order_id": "DEMO-OWN-OUT",
+    "reference": "DEMO-SELF-1",
+    "status": "成功",
+    "kind": "转账",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 55
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-OWN-IN",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-25T12:32:00",
+    "direction": "收入",
+    "amount": 120000,
+    "merchant": "我的微信",
+    "description": "本人账户划转",
+    "order_id": "DEMO-OWN-IN",
+    "reference": "DEMO-SELF-1",
+    "status": "成功",
+    "kind": "转账",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 56
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-FRIEND",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-25T12:30:00",
+    "direction": "支出",
+    "amount": 4800,
+    "merchant": "张同学（构造）",
+    "description": "聚餐分摊转账",
+    "order_id": "DEMO-FRIEND",
+    "reference": "",
+    "status": "成功",
+    "kind": "转账",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 57
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-UNKNOWN",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-25T12:30:00",
+    "direction": "支出",
+    "amount": 13900,
+    "merchant": "云间商贸（构造）",
+    "description": "扫码支付",
+    "order_id": "DEMO-UNKNOWN",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 58
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-REFUND",
+    "platform": "支付宝",
+    "account": "我的支付宝",
+    "time": "2026-09-25T12:30:00",
+    "direction": "收入",
+    "amount": 4300,
+    "merchant": "星桥超市",
+    "description": "部分退款",
+    "order_id": "DEMO-REFUND",
+    "reference": "DEMOORDER0048",
+    "status": "成功",
+    "kind": "退款",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 59
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-REFUND-MISSING",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-25T12:30:00",
+    "direction": "收入",
+    "amount": 99900,
+    "merchant": "星桥超市",
+    "description": "原订单未导入",
+    "order_id": "DEMO-REFUND-MISSING",
+    "reference": "",
+    "status": "成功",
+    "kind": "退款",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 60
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-DUP",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-09T06:45:00",
+    "direction": "支出",
+    "amount": 2900,
+    "merchant": "青禾面馆",
+    "description": "午餐面馆消费",
+    "order_id": "DEMOORDER0045",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示重复副本",
+        "row": 2
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-UNUSUAL",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-25T12:30:00",
+    "direction": "支出",
+    "amount": 389900,
+    "merchant": "远山数码（构造）",
+    "description": "数码商品大额消费",
+    "order_id": "DEMO-UNUSUAL",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 62
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-SAME-1",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-26T15:00:00",
+    "direction": "支出",
+    "amount": 2400,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品 扫码支付",
+    "order_id": "",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 63
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-SAME-2",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-26T15:01:00",
+    "direction": "支出",
+    "amount": 2400,
+    "merchant": "拾光咖啡",
+    "description": "咖啡饮品 扫码支付",
+    "order_id": "",
+    "reference": "",
+    "status": "成功",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 64
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  },
+  {
+    "id": "DEMO-CLOSED",
+    "platform": "微信",
+    "account": "我的微信",
+    "time": "2026-09-25T12:30:00",
+    "direction": "支出",
+    "amount": 88800,
+    "merchant": "构造电商",
+    "description": "关闭的商品订单",
+    "order_id": "DEMO-CLOSED",
+    "reference": "",
+    "status": "交易关闭",
+    "kind": "消费",
+    "category": "",
+    "confidence": 0,
+    "excluded": false,
+    "linked_id": "",
+    "review_status": "待处理",
+    "sources": [
+      {
+        "file": "构造演示账单",
+        "row": 65
+      }
+    ],
+    "raw": {
+      "演示标记": "明确构造数据"
+    }
+  }
+]

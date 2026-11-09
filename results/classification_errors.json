@@ -1,0 +1,163 @@
+[
+  {
+    "id": "SYN00225",
+    "text": "云间25 扫码支付",
+    "truth": "餐饮",
+    "prediction": "居住缴费",
+    "confidence": 0.3002737820914401
+  },
+  {
+    "id": "SYN00234",
+    "text": "星桥26 扫码支付",
+    "truth": "餐饮",
+    "prediction": "购物",
+    "confidence": 0.45479156489994005
+  },
+  {
+    "id": "SYN00245",
+    "text": "南巷27 扫码支付",
+    "truth": "购物",
+    "prediction": "居住缴费",
+    "confidence": 0.37066674900168145
+  },
+  {
+    "id": "SYN00247",
+    "text": "南巷27 扫码支付",
+    "truth": "医疗",
+    "prediction": "居住缴费",
+    "confidence": 0.37066674900168145
+  },
+  {
+    "id": "SYN00248",
+    "text": "南巷27 扫码支付",
+    "truth": "教育",
+    "prediction": "居住缴费",
+    "confidence": 0.37066674900168145
+  },
+  {
+    "id": "SYN00493",
+    "text": "青禾24 扫码支付",
+    "truth": "生活服务",
+    "prediction": "医疗",
+    "confidence": 0.2799596223477698
+  },
+  {
+    "id": "SYN00495",
+    "text": "云间25 扫码支付",
+    "truth": "餐饮",
+    "prediction": "居住缴费",
+    "confidence": 0.3002737820914401
+  },
+  {
+    "id": "SYN00513",
+    "text": "南巷27 扫码支付",
+    "truth": "餐饮",
+    "prediction": "居住缴费",
+    "confidence": 0.37066674900168145
+  },
+  {
+    "id": "SYN00525",
+    "text": "拾光28 扫码支付",
+    "truth": "居住缴费",
+    "prediction": "购物",
+    "confidence": 0.2976898646679923
+  },
+  {
+    "id": "SYN00536",
+    "text": "远山29 扫码支付",
+    "truth": "教育",
+    "prediction": "购物",
+    "confidence": 0.3464834442192825
+  },
+  {
+    "id": "SYN00771",
+    "text": "云间25 扫码支付",
+    "truth": "娱乐",
+    "prediction": "居住缴费",
+    "confidence": 0.3002737820914401
+  },
+  {
+    "id": "SYN00772",
+    "text": "云间25 扫码支付",
+    "truth": "生活服务",
+    "prediction": "居住缴费",
+    "confidence": 0.3002737820914401
+  },
+  {
+    "id": "SYN00807",
+    "text": "远山29 扫码支付",
+    "truth": "娱乐",
+    "prediction": "购物",
+    "confidence": 0.3464834442192825
+  },
+  {
+    "id": "SYN01301",
+    "text": "青禾24 扫码支付",
+    "truth": "教育",
+    "prediction": "医疗",
+    "confidence": 0.2799596223477698
+  },
+  {
+    "id": "SYN01315",
+    "text": "星桥26 扫码支付",
+    "truth": "交通",
+    "prediction": "购物",
+    "confidence": 0.45479156489994005
+  },
+  {
+    "id": "SYN01568",
+    "text": "青禾24 扫码支付",
+    "truth": "购物",
+    "prediction": "医疗",
+    "confidence": 0.2799596223477698
+  },
+  {
+    "id": "SYN01582",
+    "text": "云间25 扫码支付",
+    "truth": "生活服务",
+    "prediction": "居住缴费",
+    "confidence": 0.3002737820914401
+  },
+  {
+    "id": "SYN01588",
+    "text": "星桥26 扫码支付",
+    "truth": "医疗",
+    "prediction": "购物",
+    "confidence": 0.45479156489994005
+  },
+  {
+    "id": "SYN01609",
+    "text": "拾光28 扫码支付",
+    "truth": "生活服务",
+    "prediction": "购物",
+    "confidence": 0.2976898646679923
+  },
+  {
+    "id": "SYN01614",
+    "text": "远山29 扫码支付",
+    "truth": "居住缴费",
+    "prediction": "购物",
+    "confidence": 0.3464834442192825
+  },
+  {
+    "id": "SYN02123",
+    "text": "云间25 扫码支付",
+    "truth": "其他",
+    "prediction": "居住缴费",
+    "confidence": 0.3002737820914401
+  },
+  {
+    "id": "SYN02146",
+    "text": "拾光28 扫码支付",
+    "truth": "医疗",
+    "prediction": "购物",
+    "confidence": 0.2976898646679923
+  },
+  {
+    "id": "SYN02399",
+    "text": "星桥26 扫码支付",
+    "truth": "教育",
+    "prediction": "购物",
+    "confidence": 0.45479156489994005
+  }
+]

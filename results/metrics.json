@@ -1,0 +1,168 @@
+{
+  "seed": 20261110,
+  "rows": 3000,
+  "split_counts": {
+    "train": 1825,
+    "validation": 603,
+    "test": 572
+  },
+  "group_disjoint": true,
+  "selected": "NB",
+  "validation_scores": {
+    "NB": 0.9578944694091935,
+    "Logistic-C0.5": 0.9578944694091935,
+    "Logistic-C2": 0.9549443374268035,
+    "Logistic-C8": 0.9549443374268035
+  },
+  "category_threshold": 0.4,
+  "classification": [
+    {
+      "model": "多数类",
+      "macro_f1": 0.022353714661406968,
+      "accuracy": 0.1118421052631579
+    },
+    {
+      "model": "关键词规则",
+      "macro_f1": 0.9494410155301245,
+      "accuracy": 0.9451754385964912
+    },
+    {
+      "model": "NB",
+      "macro_f1": 0.9510316854681332,
+      "accuracy": 0.9495614035087719
+    },
+    {
+      "model": "Logistic-C0.5",
+      "macro_f1": 0.953539147736137,
+      "accuracy": 0.9517543859649122
+    },
+    {
+      "model": "Logistic-C2",
+      "macro_f1": 0.9510316854681332,
+      "accuracy": 0.9495614035087719
+    },
+    {
+      "model": "Logistic-C8",
+      "macro_f1": 0.9510316854681332,
+      "accuracy": 0.9495614035087719
+    }
+  ],
+  "per_category": {
+    "交通": {
+      "precision": 1.0,
+      "recall": 0.9803921568627451,
+      "f1-score": 0.9900990099009901,
+      "support": 51.0
+    },
+    "其他": {
+      "precision": 1.0,
+      "recall": 0.98,
+      "f1-score": 0.98989898989899,
+      "support": 50.0
+    },
+    "医疗": {
+      "precision": 0.9411764705882353,
+      "recall": 0.9411764705882353,
+      "f1-score": 0.9411764705882353,
+      "support": 51.0
+    },
+    "娱乐": {
+      "precision": 1.0,
+      "recall": 0.96,
+      "f1-score": 0.9795918367346939,
+      "support": 50.0
+    },
+    "居住缴费": {
+      "precision": 0.8305084745762712,
+      "recall": 0.9607843137254902,
+      "f1-score": 0.8909090909090909,
+      "support": 51.0
+    },
+    "教育": {
+      "precision": 1.0,
+      "recall": 0.9215686274509803,
+      "f1-score": 0.9591836734693877,
+      "support": 51.0
+    },
+    "生活服务": {
+      "precision": 1.0,
+      "recall": 0.92,
+      "f1-score": 0.9583333333333334,
+      "support": 50.0
+    },
+    "购物": {
+      "precision": 0.8305084745762712,
+      "recall": 0.9607843137254902,
+      "f1-score": 0.8909090909090909,
+      "support": 51.0
+    },
+    "餐饮": {
+      "precision": 1.0,
+      "recall": 0.9215686274509803,
+      "f1-score": 0.9591836734693877,
+      "support": 51.0
+    },
+    "accuracy": 0.9495614035087719,
+    "macro avg": {
+      "precision": 0.9557992688600865,
+      "recall": 0.9495860566448803,
+      "f1-score": 0.9510316854681332,
+      "support": 456.0
+    },
+    "weighted avg": {
+      "precision": 0.9555084745762712,
+      "recall": 0.9495614035087719,
+      "f1-score": 0.9508678058550574,
+      "support": 456.0
+    }
+  },
+  "classification_coverage": 0.9517543859649122,
+  "classification_auto_precision": 0.9907834101382489,
+  "matching": {
+    "refund": {
+      "precision": 1.0,
+      "recall": 0.8666666666666667,
+      "f1": 0.9285714285714286,
+      "candidate_recall": 1.0,
+      "positive_records": 30,
+      "pairs": 3569,
+      "threshold": 0.89
+    },
+    "transfer": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "candidate_recall": 1.0,
+      "positive_records": 36,
+      "pairs": 3569,
+      "threshold": 0.5
+    },
+    "duplicate": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "candidate_recall": 1.0,
+      "positive_records": 21,
+      "pairs": 3569,
+      "threshold": 0.5
+    }
+  },
+  "anomaly": {
+    "precision": 0.7272727272727273,
+    "recall": 1.0,
+    "f1": 0.8421052631578947,
+    "evaluated": 364,
+    "note": "四月冷启动不计入异常指标；仅用此前月份拟合"
+  },
+  "model_version": "20261110-070816",
+  "feedback_count": 0,
+  "seconds": 3.0949217998422682,
+  "environment": {
+    "python": "3.12.4",
+    "sklearn": "1.9.1"
+  },
+  "limitations": [
+    "有限模板构造数据，不能推断真实账单效果",
+    "真实接口与真实账单验证需要用户配置及授权样例"
+  ]
+}

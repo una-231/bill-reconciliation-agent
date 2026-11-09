@@ -1,0 +1,17 @@
+.venv/
+node_modules/
+frontend/dist/
+__pycache__/
+.pytest_cache/
+.env
+runtime/*
+!runtime/.gitkeep
+models/*.joblib
+models/ocr/
+工作文件/
+.idea/workspace.xml
+*.docx
+~$*
+data/private/
+*.log
+*.tsbuildinfo

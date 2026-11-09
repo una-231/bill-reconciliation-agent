@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill",
+  "commit": "9b3affd270f85aaf1c8a7a457f510034d5736cde",
+  "declared_version": "2.1.0",
+  "license": "MIT as declared in upstream README; upstream has no separate LICENSE file",
+  "sha256": {
+    "SKILL.md": "1599338ac2db52bad14bb5e67152b3e27279e301a267d3c1a0f8239fab499169",
+    "analyze.py": "fa217db952541d593d249f02db3693a97d520539f9e8c80764ef656b2140422e",
+    "README.md": "8e030cda3fa0af5165beeffd9db7b5d5f6166f93f37b53384bd52c9db1b392be",
+    "requirements.txt": "3787888dbf39eb94483edf69a8009040a4dfd4222a0d57ec01faff8934bacdb9"
+  },
+  "execution": "原始脚本仅审阅，不在Agent中直接执行",
+  "adaptation": "skills/bill-data-quality + backend/quality.py，重写领域检查与结构化输出"
+}

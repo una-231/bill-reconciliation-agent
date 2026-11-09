@@ -200,3 +200,31 @@ def test_category_review_propagates_refund(client):
 def test_ocr_no_whitespace_timestamp():
     rows,errors=parse_text('2026-09-0812:30 青禾面馆 支出28.00元','微信','我')
     assert not errors and rows[0]['time']=='2026-09-08T12:30:00' and rows[0]['merchant']=='青禾面馆'
+
+
+def test_model_update_retrains_real_pipeline(client,tmp_path,monkeypatch):
+    import scripts.train as training
+    import shutil,joblib
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    isolated=tmp_path/'training';(isolated/'data').mkdir(parents=True)
+    shutil.copy2(root/'data/synthetic.json',isolated/'data/synthetic.json')
+    monkeypatch.setattr(training,'ROOT',isolated)
+    with db.connect() as con:
+        for i in range(18):con.execute('INSERT INTO feedback VALUES(?,?,?,?)',(str(i),str(i),f'春山学习空间{i} 自习座位预约费用','教育'))
+    result=client.post('/api/models/update')
+    assert result.status_code==200 and result.json()['feedback_count']==18
+    trained=joblib.load(isolated/'models/active.joblib')
+    assert trained['feedback_count']==18
+    assert trained['classifier'].predict(['湖畔研习空间 自习座位预约费用'])[0]=='教育'
+
+
+def test_failed_event_rolls_back_ledger_and_feedback(client,monkeypatch):
+    from backend.main import job_with_rows
+    j=job_with_rows([tx('a')],[],'test');client.post('/api/jobs/'+j['id']+'/run')
+    before=db.get('transactions','a')
+    def failed(*args,**kwargs):raise ValueError('模拟审计写入失败')
+    monkeypatch.setattr(db,'event',failed)
+    assert client.patch('/api/ledger/a',json={'category':'教育'}).status_code==400
+    assert db.get('transactions','a')==before
+    with db.connect() as con:assert con.execute('SELECT COUNT(*) FROM feedback').fetchone()[0]==0

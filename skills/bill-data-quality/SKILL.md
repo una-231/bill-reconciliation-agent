@@ -2,6 +2,9 @@
 name: bill-data-quality
 description: 检查微信与支付宝标准化账单的字段、缺失值和统计口径，输出结构化质量问题。
 version: 1.0.0
+tool: inspect_records
+required_fields: [time, account, merchant, direction]
+permissions: []
 ---
 
 本技能适配自 coffeefuelbump/csv-data-summarizer-claude-skill 2.1.0。

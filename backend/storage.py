@@ -2,11 +2,14 @@ import json
 import os
 import sqlite3
 import uuid
+import threading
+from functools import wraps
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+_local=threading.local()
 
 
 def data_dir():
@@ -29,6 +32,10 @@ def dumps(x):
 
 @contextmanager
 def connect():
+    active=getattr(_local,'connection',None)
+    if active is not None:
+        yield active
+        return
     con = sqlite3.connect(data_dir() / 'ledger.sqlite', timeout=30)
     con.row_factory = sqlite3.Row
     con.execute('PRAGMA journal_mode=WAL')
@@ -40,6 +47,27 @@ def connect():
         raise
     finally:
         con.close()
+
+
+@contextmanager
+def atomic():
+    if getattr(_local,'connection',None) is not None:
+        yield
+        return
+    with connect() as c:
+        _local.connection=c
+        try:
+            c.execute('BEGIN IMMEDIATE')
+            yield
+        finally:
+            _local.connection=None
+
+
+def transactional(fn):
+    @wraps(fn)
+    def wrapped(*args,**kwargs):
+        with atomic():return fn(*args,**kwargs)
+    return wrapped
 
 
 def init():

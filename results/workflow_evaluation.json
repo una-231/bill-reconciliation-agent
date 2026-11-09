@@ -2,7 +2,7 @@
   "ablations": [
     {
       "variant": "原始收支+模型分类",
-      "seconds": 0.4155687000602484,
+      "seconds": 0.3839852998498827,
       "records": 572,
       "review_questions": 0,
       "review_request_rate": 0.0,
@@ -30,7 +30,7 @@
     },
     {
       "variant": "匹配但无人工核对",
-      "seconds": 0.476613299921155,
+      "seconds": 0.4486775998957455,
       "records": 572,
       "review_questions": 0,
       "review_request_rate": 0.0,
@@ -58,7 +58,7 @@
     },
     {
       "variant": "完整流程",
-      "seconds": 0.4751341000664979,
+      "seconds": 0.49278339999727905,
       "records": 572,
       "review_questions": 50,
       "review_request_rate": 0.08741258741258741,
@@ -86,7 +86,7 @@
     },
     {
       "variant": "关闭数据体检",
-      "seconds": 0.47178809996694326,
+      "seconds": 0.5495950998738408,
       "records": 572,
       "review_questions": 50,
       "review_request_rate": 0.08741258741258741,
@@ -167,6 +167,7 @@
       "outgoing_cents": 0,
       "incoming_cents": 0,
       "skill": "bill-data-quality/1.0.0",
+      "skill_sha256": "7b0428dc5b88c1c8bd7a7c2a14eba3973a67eea4a978fe13634ac7c21c028e38",
       "note": "原始收支合计包含尚未核对的转账与退款，不等于消费净支出"
     },
     "note": "独立字段缺失探针，主测试集字段完整时关闭体检不应改变结果"
@@ -182,7 +183,7 @@
       "errors": 0,
       "min_confidence": 0.95575,
       "text": "构造账单测试图 图(非真实支付截图)\n2026-09-08 12:30 青禾面馆 支出 28.00元\n2026-09-08 18:00 城市地铁 支出 6.00元\n2026-09-09 10:20 知行书店 支出 68.00元",
-      "seconds": 2.1902422001585364
+      "seconds": 2.8469670000486076
     },
     {
       "file": "demo_screenshot_blurred.png",
@@ -194,7 +195,7 @@
       "errors": 0,
       "min_confidence": 0.94694,
       "text": "构造账单测试图(非真实支付截图）\n2026-09-0812:30 青禾面馆 支出 28.00元\n2026-09-0818:00 城市地铁 支出6.00元\n2026-09-0910:20知行书店支出68.00元",
-      "seconds": 1.6641733997967094
+      "seconds": 1.597368200076744
     }
   ],
   "wrong_auto_links": [],

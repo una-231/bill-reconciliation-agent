@@ -35,6 +35,10 @@ cd ..
 
 详细过程见 [演示说明](docs/DEMO.md)，架构与接口见 [系统设计](docs/ARCHITECTURE.md)，实验见 [评估说明](docs/EVALUATION.md)。
 
+当前交付进度与尚需用户配置的验收事项见 [交付状态](docs/DELIVERY_STATUS.md)。
+
+![独立PyCharm工程中的真实验收运行](docs/screenshots/01_PyCharm真实验收.png)
+
 ## 输入与账务口径
 
 - 文件：微信、支付宝 CSV/XLSX；支持UTF-8、GB18030及账单说明行。未知表头可手工映射。

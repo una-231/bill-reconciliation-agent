@@ -11,6 +11,7 @@ import {
   ChevronRight,
   CircleHelp,
   FileText,
+  Fingerprint,
   History,
   Inbox,
   LayoutDashboard,
@@ -19,6 +20,7 @@ import {
   MessageSquare,
   Plus,
   Search,
+  Send,
   Settings2,
   ShieldCheck,
   Sparkles,
@@ -35,7 +37,6 @@ import {
   Area,
   ResponsiveContainer,
   XAxis,
-  YAxis,
   Tooltip,
   CartesianGrid,
 } from "recharts";
@@ -343,7 +344,7 @@ function App() {
             知账<small>多账户账单核对</small>
           </span>
         </a>
-        <div className="workspace-label">账本管理</div>
+        <div className="workspace-label">个人工作台</div>
         <nav>
           {nav.map((n) => (
             <button
@@ -363,7 +364,9 @@ function App() {
         <div className="sidebar-bottom">
           <div className="private-note">
             <ShieldCheck size={19} />
-            <div>账单保存在本机</div>
+            <div>
+              账单保存在本机<p>支持查看和撤销修改</p>
+            </div>
           </div>
           <button
             className={tab === "settings" ? "nav-item active" : "nav-item"}
@@ -372,6 +375,13 @@ function App() {
             <Settings2 size={18} />
             模型与设置
           </button>
+          <div className="profile">
+            <div className="avatar">我</div>
+            <div>
+              个人账本<small>微信 · 支付宝</small>
+            </div>
+            <span className="online-dot" />
+          </div>
         </div>
       </aside>
       <main className="main">
@@ -414,10 +424,10 @@ function App() {
               </h1>
               <p>
                 {tab === "overview"
-                  ? "查看已核对收支和待处理记录。"
+                  ? "汇总微信、支付宝收支，核对转账与退款。"
                   : tab === "review"
-                    ? "逐项确认分类、退款和重复记录。"
-                    : "微信、支付宝账单整理与核对"}
+                    ? "确认分类、退款和重复记录，保存后更新账本。"
+                    : "个人多账户账单整理与异常核对 Agent"}
               </p>
             </div>
             <div className="heading-actions">
@@ -474,10 +484,10 @@ function App() {
                 {rows.every(
                   (r) => (r as Tx & { synthetic?: boolean }).synthetic,
                 )
-                  ? "演示数据"
-                  : "含演示数据"}
+                  ? "构造数据演示"
+                  : "含构造演示数据"}
               </strong>
-              <span>构造样例仅用于演示，请与真实账单区分。</span>
+              <span>构造样例，不代表真实账户或消费。</span>
               <button onClick={() => setTab("experiments")}>
                 查看评估 <ArrowUpRight size={13} />
               </button>
@@ -489,13 +499,13 @@ function App() {
                 <Stat
                   label="已核对净支出"
                   amount={summary.net}
-                  sub="已核对支出 − 已匹配退款"
+                  sub="支出 − 当月到账退款"
                   highlight
                 />
                 <Stat
-                  label="已核对支出"
+                  label="已核对消费"
                   amount={summary.expense}
-                  sub="不含内部转账和重复记录"
+                  sub={`${summary.confirmed} 条记录已核对`}
                   icon={<Wallet size={18} />}
                 />
                 <Stat
@@ -523,177 +533,136 @@ function App() {
                   </button>
                 </div>
               </section>
-              {reviews.length > 0 && (
-                <section className="review-strip">
-                  <div className="review-strip-icon">
-                    <ListChecks size={23} />
-                  </div>
-                  <div>
-                    <h3>{summary.pending} 笔交易待核对</h3>
-                    <p>确认后更新账本；未确认记录暂不计入汇总。</p>
-                  </div>
-                  <button
-                    className="button secondary"
-                    onClick={() => setTab("review")}
-                  >
-                    开始核对 <ArrowRight size={16} />
-                  </button>
-                </section>
-              )}
               <div className="workspace-grid">
-                <section className="panel recent-panel">
-                  <div className="panel-heading">
-                    <div>
-                      <h2>
-                        最近交易{" "}
-                        <span className="title-count">{summary.count}</span>
-                      </h2>
-                      <p>原始记录保留，转账与重复记录单独标记</p>
-                    </div>
-                    <button
-                      className="text-button"
-                      onClick={() => setTab("ledger")}
-                    >
-                      全部明细 <ArrowRight size={14} />
-                    </button>
-                  </div>
-                  <Table rows={rows.slice(0, 5)} onDetail={openDetail} />
-                  {!rows.length && (
-                    <div className="table-empty">还没有交易记录</div>
-                  )}
-                </section>
-                <section className="panel trend-panel">
-                  <div className="panel-heading">
-                    <div>
-                      <h2>月度净支出</h2>
-                      <p>按实际收支月份统计</p>
-                    </div>
-                    <span className="subtle-tag">全部月份</span>
-                  </div>
-                  {summary.months.length ? (
-                    <>
-                      <div className="chart">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart
-                            data={summary.months.map((m) => ({
-                              ...m,
-                              元: m.net / 100,
-                            }))}
-                            margin={{
-                              left: 5,
-                              right: 18,
-                              top: 15,
-                              bottom: 0,
-                            }}
-                          >
-                            <CartesianGrid vertical={false} stroke="#edf0ed" />
-                            <XAxis
-                              dataKey="month"
-                              tickFormatter={(v) => v.slice(5) + "月"}
-                              axisLine={false}
-                              tickLine={false}
-                              tick={{ fontSize: 12, fill: "#64748b" }}
-                              interval={0}
-                              dy={8}
-                            />
-                            <YAxis
-                              width={52}
-                              axisLine={false}
-                              tickLine={false}
-                              tick={{ fontSize: 12, fill: "#64748b" }}
-                            />
-                            <Tooltip
-                              formatter={(v) => [
-                                "¥ " + Number(v).toFixed(2),
-                                "净支出",
-                              ]}
-                            />
-                            <Area
-                              type="linear"
-                              dataKey="元"
-                              stroke="#2563eb"
-                              strokeWidth={2.5}
-                              fill="#eff6ff"
-                              isAnimationActive={false}
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
+                <div className="center-column">
+                  <section className="panel trend-panel">
+                    <div className="panel-heading">
+                      <div>
+                        <h2>消费趋势</h2>
+                        <p>按实际收支月份，呈现核对后的净支出</p>
                       </div>
-                    </>
-                  ) : (
-                    <Empty
-                      icon={<Wallet size={28} />}
-                      title="从第一份账单开始"
-                      text="支持微信、支付宝文件、文字与截图"
-                      action={
-                        <button
-                          className="button primary"
-                          onClick={() => setImportOpen(true)}
-                        >
-                          <Upload size={16} />
-                          导入账单
-                        </button>
-                      }
-                    />
-                  )}
-                </section>
-                <section className="panel category-panel">
-                  <div className="panel-heading">
-                    <h2>分类支出</h2>
-                    <span className="muted">净支出</span>
-                  </div>
-                  {summary.categories.length ? (
-                    summary.categories.slice(0, 6).map((c) => (
-                      <div className="category-row" key={c.name}>
-                        <div>
-                          <span>
-                            <i
-                              style={{
-                                background: "#94a3b8",
+                      <span className="subtle-tag">全部月份</span>
+                    </div>
+                    {summary.months.length ? (
+                      <>
+                        <div className="trend-total">
+                          ¥ {money(summary.net)}
+                          <span>累计净支出</span>
+                        </div>
+                        <div className="chart">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart
+                              data={summary.months.map((m) => ({
+                                ...m,
+                                元: m.net / 100,
+                              }))}
+                              margin={{
+                                left: 5,
+                                right: 18,
+                                top: 15,
+                                bottom: 0,
                               }}
-                            />
-                            {c.name}
-                          </span>
-                          <strong>¥ {money(c.value)}</strong>
+                            >
+                              <defs>
+                                <linearGradient
+                                  id="fill"
+                                  x1="0"
+                                  y1="0"
+                                  x2="0"
+                                  y2="1"
+                                >
+                                  <stop
+                                    offset="0%"
+                                    stopColor="#277764"
+                                    stopOpacity={0.2}
+                                  />
+                                  <stop
+                                    offset="95%"
+                                    stopColor="#277764"
+                                    stopOpacity={0.01}
+                                  />
+                                </linearGradient>
+                              </defs>
+                              <CartesianGrid
+                                vertical={false}
+                                stroke="#edf0ed"
+                              />
+                              <XAxis
+                                dataKey="month"
+                                tickFormatter={(v) => v.slice(5) + "月"}
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fontSize: 11, fill: "#8a938c" }}
+                                dy={8}
+                              />
+                              <Tooltip
+                                formatter={(v) => [
+                                  "¥ " + Number(v).toFixed(2),
+                                  "净支出",
+                                ]}
+                              />
+                              <Area
+                                type="monotone"
+                                dataKey="元"
+                                stroke="#287863"
+                                strokeWidth={2.5}
+                                fill="url(#fill)"
+                              />
+                            </AreaChart>
+                          </ResponsiveContainer>
                         </div>
-                        <div className="bar-bg">
-                          <div
-                            style={{
-                              width:
-                                (Math.max(0, c.value) /
-                                  Math.max(
-                                    ...summary.categories.map((c) => c.value),
-                                    1,
-                                  )) *
-                                  100 +
-                                "%",
-                              background: "#94a3b8",
-                            }}
-                          />
-                        </div>
+                      </>
+                    ) : (
+                      <Empty
+                        icon={<Wallet size={28} />}
+                        title="导入账单后查看统计"
+                        text="支持微信、支付宝文件、文字与截图"
+                        action={
+                          <button
+                            className="button primary"
+                            onClick={() => setImportOpen(true)}
+                          >
+                            <Upload size={16} />
+                            导入账单
+                          </button>
+                        }
+                      />
+                    )}
+                  </section>
+                  <section className="panel">
+                    <div className="panel-heading">
+                      <div>
+                        <h2>
+                          最近交易{" "}
+                          <span className="title-count">{summary.count}</span>
+                        </h2>
+                        <p>原始记录保留，转账与重复记录单独标记</p>
                       </div>
-                    ))
-                  ) : (
-                    <p className="muted padded">核对完成后展示分类统计</p>
-                  )}
-                </section>
-                <details className="assistant-disclosure">
-                  <summary>
-                    <MessageSquare size={18} />
-                    账单助手<span>询问支出、退款或核对问题</span>
-                    <ChevronDown size={16} />
-                  </summary>
+                      <button
+                        className="text-button"
+                        onClick={() => setTab("ledger")}
+                      >
+                        全部明细 <ArrowRight size={14} />
+                      </button>
+                    </div>
+                    <Table rows={rows.slice(0, 5)} onDetail={openDetail} />
+                    {!rows.length && (
+                      <div className="table-empty">还没有交易记录</div>
+                    )}
+                  </section>
+                </div>
+                <aside className="right-column">
                   <section className="panel agent-panel">
                     <div className="agent-heading">
                       <span className="agent-icon">
-                        <MessageSquare size={18} />
+                        <Sparkles size={20} />
                       </span>
                       <div>
-                        <h2>账单助手</h2>
+                        <h2>知账助手</h2>
                         <p>
                           {remote && config?.llm.configured
-                            ? "联网问答"
-                            : "本地问答"}
+                            ? `${config.llm.model} · 联网问答`
+                            : "本地工具 · 随时核对"}
                         </p>
                       </div>
                       <span className="online-dot" />
@@ -703,7 +672,7 @@ function App() {
                         <div key={i} className={"chat-message " + m.role}>
                           {m.role === "agent" && (
                             <span className="chat-name">
-                              助手 {m.mode === "api" ? "· 联网" : "· 本地"}
+                              知账 {m.mode === "api" ? "· Qwen" : "· 本地"}
                             </span>
                           )}
                           {m.text}
@@ -730,7 +699,7 @@ function App() {
                         disabled={!!busy || !message.trim()}
                         onClick={send}
                       >
-                        发送
+                        <Send size={16} />
                       </button>
                     </div>
                     <label className="remote-option">
@@ -743,11 +712,90 @@ function App() {
                       允许发送本次问题与脱敏汇总至 API
                     </label>
                   </section>
-                </details>
+                  <section className="panel category-panel">
+                    <div className="panel-heading">
+                      <h2>分类支出</h2>
+                      <span className="muted">净支出</span>
+                    </div>
+                    {summary.categories.length ? (
+                      summary.categories.slice(0, 6).map((c, i) => (
+                        <div className="category-row" key={c.name}>
+                          <div>
+                            <span>
+                              <i
+                                style={{
+                                  background: [
+                                    "#246b59",
+                                    "#578b77",
+                                    "#9dba99",
+                                    "#d1b26b",
+                                    "#87a9ad",
+                                    "#bcc6b7",
+                                  ][i],
+                                }}
+                              />
+                              {c.name}
+                            </span>
+                            <strong>¥ {money(c.value)}</strong>
+                          </div>
+                          <div className="bar-bg">
+                            <div
+                              style={{
+                                width:
+                                  (Math.max(0, c.value) /
+                                    Math.max(
+                                      ...summary.categories.map((c) => c.value),
+                                      1,
+                                    )) *
+                                    100 +
+                                  "%",
+                                background: [
+                                  "#246b59",
+                                  "#578b77",
+                                  "#9dba99",
+                                  "#d1b26b",
+                                  "#87a9ad",
+                                  "#bcc6b7",
+                                ][i],
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="muted padded">核对完成后展示分类统计</p>
+                    )}
+                  </section>
+                  <div className="audit-note">
+                    <Fingerprint size={23} />
+                    <div>
+                      修改记录<p>保留原始数据，支持撤销。</p>
+                    </div>
+                  </div>
+                </aside>
               </div>
+              {reviews.length > 0 && (
+                <section className="review-strip">
+                  <div className="review-strip-icon">
+                    <ListChecks size={23} />
+                  </div>
+                  <div>
+                    <h3>{summary.pending} 笔交易待核对</h3>
+                    <p>
+                      分类不确定、退款未匹配或同额近时记录，集中核对后再计入汇总。
+                    </p>
+                  </div>
+                  <button
+                    className="button secondary"
+                    onClick={() => setTab("review")}
+                  >
+                    开始核对 <ArrowRight size={16} />
+                  </button>
+                </section>
+              )}
               {!rows.length && (
                 <div className="demo-invite">
-                  <span>想先看看完整流程？</span>
+                  <span>使用构造样例体验完整流程</span>
                   <button
                     className="text-button"
                     onClick={demo}
@@ -1419,7 +1467,7 @@ function App() {
             </div>
           )}
           <footer>
-            <span>知账 · 多账户账单核对</span>
+            <span>知账 · 个人多账户账单整理与异常核对 Agent</span>
             <span>
               <ShieldCheck size={13} />
               人民币 · 金额精确到分
@@ -1447,7 +1495,7 @@ function App() {
               <Upload size={25} />
             </span>
             <h2>导入账单</h2>
-            <p className="muted">选择平台和本人账户，再添加文件或粘贴文字。</p>
+            <p className="muted">选择平台和本人账户，上传文件或粘贴文字。</p>
             <div className="form-row">
               <label>
                 账单平台

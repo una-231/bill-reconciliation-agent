@@ -102,6 +102,7 @@ type Job = {
 type Config = {
   llm: {
     configured: boolean;
+    pricing_configured: boolean;
     model: string;
     spent_cny: number;
     budget_cny: number;
@@ -653,7 +654,7 @@ function App() {
                         <h2>知账助手</h2>
                         <p>
                           {remote && config?.llm.configured
-                            ? "Qwen-Flash · 联网问答"
+                            ? `${config.llm.model} · 联网问答`
                             : "本地工具 · 随时核对"}
                         </p>
                       </div>
@@ -1377,6 +1378,20 @@ function App() {
                     ¥ {config?.llm.spent_cny.toFixed(6)} /{" "}
                     {config?.llm.budget_cny.toFixed(2)}
                   </strong>
+                </div>
+                <div className="setting-line">
+                  <span>计费单价</span>
+                  <span
+                    className={
+                      config?.llm.pricing_configured
+                        ? "green-text"
+                        : "amber-text"
+                    }
+                  >
+                    {config?.llm.pricing_configured
+                      ? "已配置估算单价"
+                      : "等待确认当前平台单价"}
+                  </span>
                 </div>
                 <div className="setting-line">
                   <span>请求次数（含失败预留）</span>

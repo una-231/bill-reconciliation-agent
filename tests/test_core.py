@@ -25,6 +25,9 @@ def tx(id,**kw):
 def client(tmp_path,monkeypatch):
     monkeypatch.setenv('BILL_DATA_DIR',str(tmp_path))
     monkeypatch.delenv('LLM_API_KEY',raising=False)
+    monkeypatch.setenv('LLM_INPUT_CNY_PER_M','0.15')
+    monkeypatch.setenv('LLM_OUTPUT_CNY_PER_M','1.5')
+    monkeypatch.setattr('backend.main.load_dotenv',lambda *args,**kwargs:None)
     with TestClient(app) as c:yield c
 
 
@@ -228,3 +231,13 @@ def test_failed_event_rolls_back_ledger_and_feedback(client,monkeypatch):
     assert client.patch('/api/ledger/a',json={'category':'教育'}).status_code==400
     assert db.get('transactions','a')==before
     with db.connect() as con:assert con.execute('SELECT COUNT(*) FROM feedback').fetchone()[0]==0
+
+
+def test_unknown_provider_pricing_blocks_call_without_spending(client,monkeypatch):
+    from backend import llm
+    monkeypatch.setenv('LLM_API_KEY','test-placeholder')
+    monkeypatch.setenv('LLM_INPUT_CNY_PER_M','')
+    assert not llm.status()['pricing_configured']
+    with pytest.raises(ValueError,match='单价'):
+        llm.call_json([{'role':'user','content':'构造账单测试'}])
+    assert llm.status()['calls']==0

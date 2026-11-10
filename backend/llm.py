@@ -4,18 +4,33 @@ import httpx
 from .storage import connect, uid, dumps, now
 
 
+def pricing():
+    try:
+        inp=float(os.getenv('LLM_INPUT_CNY_PER_M','.15'))
+        out=float(os.getenv('LLM_OUTPUT_CNY_PER_M','1.5'))
+        if not (0<=inp<float('inf') and 0<=out<float('inf')):
+            raise ValueError
+    except (TypeError,ValueError) as exc:
+        raise ValueError('请先按当前平台确认并填写输入、输出单价（元/百万tokens），再调用API') from exc
+    return inp,out
+
+
 def status():
     with connect() as c:
         cost=c.execute('SELECT COALESCE(SUM(cost),0) FROM usage').fetchone()[0]
         count=c.execute('SELECT COUNT(*) FROM usage').fetchone()[0]
-    return dict(configured=bool(os.getenv('LLM_API_KEY')),model=os.getenv('LLM_MODEL','qwen-flash'),
+    try:
+        pricing();pricing_configured=True
+    except ValueError:
+        pricing_configured=False
+    return dict(configured=bool(os.getenv('LLM_API_KEY')),model=os.getenv('LLM_MODEL','qwen-flash'),pricing_configured=pricing_configured,
         spent_cny=round(cost,6),budget_cny=float(os.getenv('LLM_BUDGET_CNY','5')),calls=count)
 
 
 def call_json(messages):
     key=os.getenv('LLM_API_KEY')
     if not key:raise ValueError('尚未配置本地 LLM_API_KEY')
-    inp=float(os.getenv('LLM_INPUT_CNY_PER_M','.15'));out=float(os.getenv('LLM_OUTPUT_CNY_PER_M','1.5'))
+    inp,out=pricing()
     # 中文字符按最多两 tokens 预留，避免最后一次调用越过本地预算。
     reserve=(len(json.dumps(messages,ensure_ascii=False))*2*inp+1600*out)/1e6
     request_id=uid()

@@ -1,0 +1,98 @@
+{
+  "success": true,
+  "model": "qwen3.7-flash",
+  "cases": [
+    {
+      "name": "结构化净支出计算",
+      "success": true,
+      "response": {
+        "ok": true,
+        "net_cents": 8000
+      },
+      "seconds": 3.28
+    },
+    {
+      "name": "核对问题问答",
+      "success": true,
+      "mode": "api",
+      "reply": "当前账本已汇总65条记录，其中57条已确认，4条待处理，4条被排除。总支出262900分，退款4300分，净支出258600分。主要支出集中在购物(48200)、居住缴费(48100)和教育(41700)。时间跨度为2026年7月至9月。\n\n以下问题需要人工确认：\n1. 分类存疑 (ID: 4d8ad850c865e6a3475cbfac): 金额13900分，需确认正确类别。\n2. 退款异常 (ID: ccdc49f09d4ef442e47d6bd5): 金额99900分，疑似大额退款或数据错误，请核实。\n3. 重复交易 (ID: 435daefacb6d614db1098827): 金额2400分，疑似重复记录，请确认是否保留一条。\n4. 异常金额 (ID: ca6eb8f01d8d35b960e19935): 金额389900分，远超常规单笔，请核实是否为误录或合并项。",
+      "tools": [
+        "ledger_summary",
+        "list_review_questions"
+      ],
+      "seconds": 6.189
+    },
+    {
+      "name": "退款口径问答",
+      "success": true,
+      "mode": "api",
+      "reply": "根据工具汇总数据，退款对月度净支出的影响如下：\n\n1. **整体影响**：当前账本总支出为 262900 分，已确认退款金额为 4300 分。因此，月度净支出计算为 258600 分（即 262900 - 4300）。\n\n2. **按月分布**：\n   - **2026-07**：无退款，净支出等于支出 90800 分。\n   - **2026-08**：无退款，净支出等于支出 94800 分。\n   - **2026-09**：发生退款 4300 分，该月净支出为 73000 分（支出 77300 分减去退款 4300 分）。\n\n结论：退款仅在 2026-09 产生抵扣作用，直接减少了当月的净支出金额。",
+      "tools": [
+        "ledger_summary",
+        "list_review_questions"
+      ],
+      "seconds": 6.195
+    }
+  ],
+  "usage": [
+    {
+      "cost_cny": 2.9e-05,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 81,
+        "total_tokens": 97,
+        "completion_tokens": 16,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 81
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T07:59:06.173397+00:00"
+    },
+    {
+      "cost_cny": 0.00043720000000000006,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 874,
+        "total_tokens": 1202,
+        "completion_tokens": 328,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 874
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T07:59:12.522388+00:00"
+    },
+    {
+      "cost_cny": 0.0003844,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 874,
+        "total_tokens": 1136,
+        "completion_tokens": 262,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 874
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T07:59:18.719957+00:00"
+    }
+  ],
+  "calls_in_run": 3,
+  "estimated_cost_cny": 0.000851,
+  "total_project_estimated_cost_cny": 0.006571,
+  "pricing": {
+    "input_cny_per_million": 0.2,
+    "output_cny_per_million": 0.8,
+    "source": "本地配置，本次用户提供平台计费截图，输入<=32K档"
+  },
+  "enable_thinking": "false",
+  "free_quota": "用户声明有1M免费额度，实际抵扣由平台账单确认，以下费用为抵扣前保守估算",
+  "data_source": "明确构造账单与匿名汇总，不含原始真实账单",
+  "total_project_requests": 9,
+  "successful_usage_tokens": 8858,
+  "token_note": "已返回usage的成功请求tokens小计；超时请求用量未知，不据此推算平台免费额度余额"
+}

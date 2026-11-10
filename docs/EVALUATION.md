@@ -64,6 +64,6 @@
 
 ## 当前验收边界
 
-本地功能与公开构造样例已实测；外部API真实调用等待本机密钥配置，真实账单兼容性等待用户授权样例。不得把等待中的项目标记为已完成。
+本地功能与公开构造样例已实测；真实API验证以results/api_validation.json的实际记录为准，详见docs/API_VALIDATION.md。真实账单兼容性仍等待用户授权样例，不将其标记为已完成。
 
 复现命令见README。完整机器可读记录在results/metrics.json、results/workflow_evaluation.json和results/ablations.csv。

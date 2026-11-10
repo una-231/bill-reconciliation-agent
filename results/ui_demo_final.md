@@ -1,0 +1,165 @@
+- complementary:
+  - link "知账 RECONCILIATION AGENT":
+    - /url: "#"
+    - text: 知账
+    - generic: RECONCILIATION AGENT
+  - text: 个人工作台
+  - generic: LOCAL
+  - navigation:
+    - button "账本概览":
+      - text: 账本概览
+    - button "交易明细":
+      - text: 交易明细
+    - button "待核对":
+      - text: 待核对
+    - button "处理记录":
+      - text: 处理记录
+    - button "实验评估":
+      - text: 实验评估
+  - text: 你的账单，留在本机
+  - paragraph: 本地存储 · 可追溯修改
+  - button "模型与设置":
+    - text: 模型与设置
+  - generic: 我
+  - text: 个人账本
+  - generic: 微信 · 支付宝
+- main:
+  - text: 个人账本
+  - strong: 账本概览
+  - generic: 本地工作台
+  - button "刷新":
+  - generic: A CLEARER PICTURE OF YOUR SPENDING
+  - heading "把每一笔，核对清楚。" [level=1]
+  - paragraph: 整理多个账户，厘清转账与退款，看见真实支出。
+  - link "导出账本":
+    - /url: /api/export?format=xlsx
+    - text: 导出账本
+  - button "导入账单":
+    - text: 导入账单
+  - strong: 构造数据演示
+  - generic: 当前演示账单为程序构造，不代表真实账户或真实消费。
+  - button "查看评估":
+    - text: 查看评估
+  - text: 已核对净支出
+  - generic: ¥6,648.00
+  - paragraph: 支出 − 当月到账退款
+  - text: 已核对消费
+  - generic: ¥6,691.00
+  - paragraph: 60 条记录已核对
+  - text: 已匹配退款
+  - generic: ¥43.00
+  - paragraph: 已关联原消费订单
+  - text: 等待你的确认
+  - generic: 0笔
+  - button "0 个待核对问题":
+    - text: 0 个待核对问题
+  - heading "消费趋势" [level=2]
+  - paragraph: 按实际收支月份，呈现核对后的净支出
+  - text: 全部月份
+  - generic: ¥ 6,648.00累计净支出
+  - application:
+    - generic: 08月
+    - generic: 09月
+  - heading "最近交易 65" [level=2]
+  - paragraph: 原始记录保留，转账与重复记录单独标记
+  - button "全部明细":
+    - text: 全部明细
+  - table:
+    - rowgroup:
+      - row "交易对方 / 说明 账户 类别 金额 核对状态":
+        - columnheader "交易对方 / 说明"
+        - columnheader "账户"
+        - columnheader "类别"
+        - columnheader "金额"
+        - columnheader "核对状态"
+        - columnheader
+    - rowgroup:
+      - row "拾光咖啡 2026-09-26 · 咖啡饮品 扫码支付 微信 餐饮 -24.00 已核对":
+        - cell "拾光咖啡 2026-09-26 · 咖啡饮品 扫码支付":
+          - strong: 拾光咖啡
+          - generic: 2026-09-26 · 咖啡饮品 扫码支付
+        - cell "微信":
+          - generic: 微信
+        - cell "餐饮"
+        - cell "-24.00"
+        - cell "已核对":
+          - generic: 已核对
+        - cell:
+      - row "拾光咖啡 2026-09-26 · 咖啡饮品 扫码支付 微信 餐饮 -24.00 已核对":
+        - cell "拾光咖啡 2026-09-26 · 咖啡饮品 扫码支付":
+          - strong: 拾光咖啡
+          - generic: 2026-09-26 · 咖啡饮品 扫码支付
+        - cell "微信":
+          - generic: 微信
+        - cell "餐饮"
+        - cell "-24.00"
+        - cell "已核对":
+          - generic: 已核对
+        - cell:
+      - row "我的微信 2026-09-25 · 本人账户划转 支付宝 转账 +1,200.00 排除计账":
+        - cell "我的微信 2026-09-25 · 本人账户划转":
+          - strong: 我的微信
+          - generic: 2026-09-25 · 本人账户划转
+        - cell "支付宝":
+          - generic: 支付宝
+        - cell "转账"
+        - cell "+1,200.00"
+        - cell "排除计账":
+          - generic: 排除计账
+        - cell:
+      - row "我的支付宝 2026-09-25 · 本人账户划转 微信 转账 -1,200.00 排除计账":
+        - cell "我的支付宝 2026-09-25 · 本人账户划转":
+          - strong: 我的支付宝
+          - generic: 2026-09-25 · 本人账户划转
+        - cell "微信":
+          - generic: 微信
+        - cell "转账"
+        - cell "-1,200.00"
+        - cell "排除计账":
+          - generic: 排除计账
+        - cell:
+      - row "星桥超市 2026-09-25 · 部分退款 支付宝 退款 +43.00 已核对":
+        - cell "星桥超市 2026-09-25 · 部分退款":
+          - strong: 星桥超市
+          - generic: 2026-09-25 · 部分退款
+        - cell "支付宝":
+          - generic: 支付宝
+        - cell "退款"
+        - cell "+43.00"
+        - cell "已核对":
+          - generic: 已核对
+        - cell:
+  - complementary:
+    - heading "知账助手" [level=2]
+    - paragraph: qwen3.7-flash · 联网问答
+    - generic: 知账 · 本地
+    - text: 你好，我是知账。导入微信、支付宝账单后，我会整理消费、匹配转账和退款，把需要你确认的问题集中在这里。
+    - generic: 核对完成后的净支出是多少？请用元回答。
+    - generic: 知账 · Qwen
+    - text: 核对完成后的净支出为6648元。
+    - button "哪些需要核对？"
+    - button "退款匹配情况"
+    - textbox "询问知账":
+      - /placeholder: 问问这份账单…
+    - button "发送" [disabled]:
+    - checkbox "允许发送本次问题与脱敏汇总至 API" [checked]
+    - text: 允许发送本次问题与脱敏汇总至 API
+    - heading "消费去向" [level=2]
+    - generic: 净支出
+    - generic: 购物
+    - strong: ¥ 4,520.00
+    - generic: 居住缴费
+    - strong: ¥ 481.00
+    - generic: 教育
+    - strong: ¥ 417.00
+    - generic: 餐饮
+    - strong: ¥ 376.00
+    - generic: 娱乐
+    - strong: ¥ 281.00
+    - generic: 医疗
+    - strong: ¥ 261.00
+    - text: 每一处修改，都可追溯
+    - paragraph: 原始数据保留，确认操作可撤销。
+  - generic: 知账 · 个人多账户账单整理与异常核对 Agent
+  - text: 人民币 · 金额精确到分
+- generic: 07月

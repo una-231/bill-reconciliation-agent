@@ -1,0 +1,8 @@
+{
+  "command": "python -m pytest -q --tb=short",
+  "passed": 36,
+  "failed": 0,
+  "seconds": 8.81,
+  "frontend_build": "npm run build passed",
+  "note": "来自本轮实际运行；PyCharm早期截图为31项，后续新增5项测试"
+}

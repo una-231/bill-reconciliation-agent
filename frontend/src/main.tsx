@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   ArrowDownToLine,
@@ -207,6 +207,7 @@ function App() {
   const [page, setPage] = useState(0);
   const [message, setMessage] = useState("");
   const [remote, setRemote] = useState(false);
+  const chatBox = useRef<HTMLDivElement>(null);
   const [chat, setChat] = useState<
     { role: string; text: string; mode?: string }[]
   >([
@@ -239,6 +240,10 @@ function App() {
   useEffect(() => {
     refresh().catch((e) => setError(e.message));
   }, []);
+  useEffect(() => {
+    if (chatBox.current)
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
+  }, [chat]);
   const action = async (label: string, fn: () => Promise<void>) => {
     setBusy(label);
     setError("");
@@ -272,6 +277,7 @@ function App() {
     });
   const importData = () =>
     action("正在导入并整理", async () => {
+      if (!synthetic) setRemote(false);
       let j: Job;
       if (files.length) {
         const f = new FormData();
@@ -660,7 +666,7 @@ function App() {
                       </div>
                       <span className="online-dot" />
                     </div>
-                    <div className="chat-messages">
+                    <div className="chat-messages" ref={chatBox}>
                       {chat.slice(-5).map((m, i) => (
                         <div key={i} className={"chat-message " + m.role}>
                           {m.role === "agent" && (

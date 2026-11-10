@@ -85,8 +85,10 @@ def evaluate():
                 merchant_exact=sum(r['merchant']==t for r,t in zip(rows,['青禾面馆','城市地铁','知行书店']))/3,
                 errors=len(errors),min_confidence=score,text=text,seconds=time.perf_counter()-start))
         except Exception as e:ocr_results.append(dict(file=filename,error=str(e),seconds=time.perf_counter()-start))
+    api_path=ROOT/'results/api_validation.json'
+    api_passed=api_path.exists() and json.loads(api_path.read_text(encoding='utf-8')).get('success',False)
     result=dict(ablations=cases,simulated_human_feedback=oracle,personalization=adaptation_result,quality=quality,ocr=ocr_results,wrong_auto_links=failed,
-        api_validation='pending_user_key',real_data_validation='pending_user_authorized_sample')
+        api_validation='passed' if api_passed else 'pending_live_validation',real_data_validation='pending_user_authorized_sample')
     (ROOT/'results/workflow_evaluation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
     pd.DataFrame(cases).drop(columns=['auto_link_by_kind']).to_csv(ROOT/'results/ablations.csv',index=False,encoding='utf-8-sig')
     print(json.dumps(result,ensure_ascii=False,indent=2))

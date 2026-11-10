@@ -13,7 +13,7 @@
 |React / Vite / TypeScript|https://react.dev/ / https://vite.dev/ / https://www.typescriptlang.org/|MIT / MIT / Apache-2.0|界面基础设施，页面与交互自行实现|
 |Lucide / Recharts|https://lucide.dev/ / https://recharts.org/|ISC / MIT|图标及趋势图|
 |CSV Data Summarizer 2.1.0|https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill|上游README声明MIT，无单独LICENSE|审阅并适配其数据体检工作流；上游原文件仅保留供核查|
-|Qwen-Flash API|https://help.aliyun.com/zh/model-studio/|阿里云服务条款，不把API等同本地开源权重|可配置的文字结构化和对话服务|
+|Qwen兼容API，本次验证qwen3.7-flash|用户在本地配置的服务；参数参考https://help.aliyun.com/zh/model-studio/|服务商API服务条款，不把API等同本地开源权重|文字结构化和对话；未复制模型权重，保留实际返回模型ID与usage|
 |公开构造账单|scripts/generate_data.py、scripts/make_demo.py|CC0-1.0|本项目自行生成，无真实用户账单|
 
 ## 深入核验的 Skill

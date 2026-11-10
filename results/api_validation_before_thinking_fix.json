@@ -1,0 +1,93 @@
+{
+  "success": false,
+  "model": "qwen3.7-flash",
+  "cases": [
+    {
+      "name": "结构化净支出计算",
+      "success": true,
+      "response": {
+        "ok": true,
+        "net_cents": 8000
+      },
+      "seconds": 15.043
+    },
+    {
+      "name": "核对问题问答",
+      "success": false,
+      "mode": "local",
+      "reply": "外部接口暂不可用：The read operation timed out。当前有 4 个待核对问题，涉及 4 条交易。请逐项查看核对卡，确认类别、原订单或保留／排除；异常提示不代表交易错误。",
+      "tools": [
+        "ledger_summary",
+        "list_review_questions"
+      ],
+      "seconds": 31.915
+    },
+    {
+      "name": "退款口径问答",
+      "success": true,
+      "mode": "api",
+      "reply": "根据工具汇总数据，已匹配退款对月度净支出的影响如下：\n\n1. **计算逻辑**：月度净支出 = 月度总支出 - 月度总退款。退款直接冲减当月的支出总额。\n2. **具体表现**：在汇总数据中，2026-09 月份产生了 4300 分的退款。该笔退款使当月净支出从原始支出的 77300 分降低至 73000 分（77300 - 4300 = 73000）。\n3. **整体影响**：当前账本总净支出为 258600 分，这是在总支出 262900 分的基础上扣除了 4300 分退款后的结果。\n\n请注意，工具中还存在一笔金额为 99900 分的待确认退款问题（ID: ccdc49f09d4ef442e47d6bd5），若该笔退款被确认为有效并计入，将进一步降低净支出。建议您在核对卡中确认该笔大额退款的归属月份及有效性。",
+      "tools": [
+        "ledger_summary",
+        "list_review_questions"
+      ],
+      "seconds": 24.788
+    }
+  ],
+  "usage": [
+    {
+      "cost_cny": 0.0006854,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 79,
+        "total_tokens": 916,
+        "completion_tokens": 837,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 79
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 818,
+          "text_tokens": 837
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T07:55:16.723193+00:00"
+    },
+    {
+      "cost_cny": 0.0020935999999999997,
+      "model": "qwen3.7-flash",
+      "status": "failed_reserved",
+      "time": "2026-11-10T07:55:48.797419+00:00"
+    },
+    {
+      "cost_cny": 0.0019216,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 872,
+        "total_tokens": 3056,
+        "completion_tokens": 2184,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 872
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1877,
+          "text_tokens": 2184
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T07:56:13.581123+00:00"
+    }
+  ],
+  "calls_in_run": 3,
+  "estimated_cost_cny": 0.0047,
+  "total_project_estimated_cost_cny": 0.005353,
+  "pricing": {
+    "input_cny_per_million": 0.2,
+    "output_cny_per_million": 0.8,
+    "source": "用户提供的平台计费截图，输入<=32K档"
+  },
+  "free_quota": "用户声明有1M免费额度，实际抵扣由平台账单确认，以下费用为抵扣前保守估算",
+  "data_source": "明确构造账单与匿名汇总，不含原始真实账单"
+}

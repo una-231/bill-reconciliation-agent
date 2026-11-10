@@ -241,3 +241,26 @@ def test_unknown_provider_pricing_blocks_call_without_spending(client,monkeypatc
     with pytest.raises(ValueError,match='单价'):
         llm.call_json([{'role':'user','content':'构造账单测试'}])
     assert llm.status()['calls']==0
+
+
+def test_oversized_prompt_blocks_before_budget_reservation(client,monkeypatch):
+    from backend import llm
+    monkeypatch.setenv('LLM_API_KEY','test-placeholder')
+    monkeypatch.setenv('LLM_MAX_INPUT_TOKENS','30000')
+    with pytest.raises(ValueError,match='长度限制'):
+        llm.call_json([{'role':'user','content':'账'*11000}])
+    assert llm.status()['calls']==0
+
+
+def test_qwen_non_thinking_payload_and_usage(client,monkeypatch):
+    from backend import llm
+    import httpx
+    monkeypatch.setenv('LLM_API_KEY','test-placeholder')
+    monkeypatch.setenv('LLM_ENABLE_THINKING','false')
+    def completed(self,url,**kwargs):
+        assert kwargs['json']['enable_thinking'] is False
+        assert kwargs['json']['response_format']=={'type':'json_object'}
+        return httpx.Response(200,json={'model':'test-model','usage':{'prompt_tokens':10,'completion_tokens':20},'choices':[{'message':{'content':'{"ok":true}'}}]})
+    monkeypatch.setattr('httpx.Client.post',completed)
+    assert llm.call_json([{'role':'user','content':'JSON test'}])=={'ok':True}
+    assert llm.status()['calls']==1

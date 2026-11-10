@@ -31,8 +31,11 @@ def call_json(messages):
     key=os.getenv('LLM_API_KEY')
     if not key:raise ValueError('尚未配置本地 LLM_API_KEY')
     inp,out=pricing()
-    # 中文字符按最多两 tokens 预留，避免最后一次调用越过本地预算。
-    reserve=(len(json.dumps(messages,ensure_ascii=False))*2*inp+1600*out)/1e6
+    # 用UTF-8字节数加协议余量保守预留，默认限制在32K计费档以内。
+    input_upper=len(json.dumps(messages,ensure_ascii=False).encode('utf-8'))+1024
+    if input_upper>int(os.getenv('LLM_MAX_INPUT_TOKENS','30000')):
+        raise ValueError('本次输入超过当前计费档的长度限制，请缩短或分批处理')
+    reserve=(input_upper*inp+1600*out)/1e6
     request_id=uid()
     with connect() as c:
         c.execute('BEGIN IMMEDIATE')
@@ -42,9 +45,14 @@ def call_json(messages):
         c.execute('INSERT INTO usage VALUES(?,?,?)',(request_id,reserve,dumps(dict(status='reserved',time=now()))))
     model=os.getenv('LLM_MODEL','qwen-flash')
     try:
+        payload=dict(model=model,messages=messages,max_tokens=1600,temperature=.1,response_format={'type':'json_object'})
+        thinking=os.getenv('LLM_ENABLE_THINKING')
+        if thinking is not None:
+            if thinking.lower() not in ['true','false']:raise ValueError('LLM_ENABLE_THINKING须为true或false')
+            payload['enable_thinking']=thinking.lower()=='true'
         with httpx.Client(timeout=float(os.getenv('LLM_TIMEOUT_SECONDS','30'))) as client:
             response=client.post(os.getenv('LLM_BASE_URL','https://dashscope.aliyuncs.com/compatible-mode/v1').rstrip('/')+'/chat/completions',
-                headers={'Authorization':'Bearer '+key},json=dict(model=model,messages=messages,max_tokens=1600,temperature=.1,response_format={'type':'json_object'}))
+                headers={'Authorization':'Bearer '+key},json=payload)
         if response.status_code>=400:
             raise ValueError(f'模型服务返回 HTTP {response.status_code}，请检查本地配置和额度')
         result=response.json();usage=result.get('usage',{})

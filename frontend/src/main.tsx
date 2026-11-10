@@ -62,6 +62,52 @@ type Tx = {
   sources: Record<string, unknown>[];
   raw: Record<string, unknown>;
 };
+type NoteEntry = {
+  id: string;
+  date: string | null;
+  time: string | null;
+  merchant: string;
+  amount_yuan: string | null;
+  direction: string | null;
+  kind: string;
+  platform: string | null;
+  account: string;
+  description: string;
+  evidence: string;
+};
+type NoteDraft = {
+  id: string;
+  status: string;
+  revision: number;
+  reference_date: string;
+  platform: string;
+  account: string;
+  synthetic: boolean;
+  messages: { text: string }[];
+  items: NoteEntry[];
+  questions: string[];
+  mode: string;
+  warning: string;
+};
+const noteDraftKey = "bill-note-draft";
+const noteCacheKey = "bill-note-edits";
+const todayLocal = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+const noteReady = (r: NoteEntry) =>
+  !!(
+    r.date &&
+    r.merchant.trim() &&
+    r.amount_yuan !== null &&
+    /^\d+(\.\d{1,2})?$/.test(r.amount_yuan) &&
+    r.direction &&
+    r.platform &&
+    r.account.trim() &&
+    !(r.kind === "退款" && r.direction !== "收入") &&
+    !(r.kind === "消费" && r.direction === "收入") &&
+    !(r.kind === "收入" && r.direction !== "收入")
+  );
 type Review = {
   id: string;
   tx_id: string;
@@ -200,6 +246,12 @@ function App() {
   const [synthetic, setSynthetic] = useState(false);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [note, setNote] = useState<NoteDraft | null>(null);
+  const [noteRemote, setNoteRemote] = useState(false);
+  const [noteReply, setNoteReply] = useState("");
+  const [noteDate, setNoteDate] = useState(todayLocal);
+  const [noteEdited, setNoteEdited] = useState(false);
+  const [noteAcknowledged, setNoteAcknowledged] = useState(false);
   const [detail, setDetail] = useState<Tx | null>(null);
   const [editCat, setEditCat] = useState("");
   const [search, setSearch] = useState("");
@@ -208,6 +260,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [remote, setRemote] = useState(false);
   const chatBox = useRef<HTMLDivElement>(null);
+  const notePreviewBox = useRef<HTMLElement>(null);
   const [chat, setChat] = useState<
     { role: string; text: string; mode?: string }[]
   >([
@@ -239,6 +292,36 @@ function App() {
   };
   useEffect(() => {
     refresh().catch((e) => setError(e.message));
+    const id = localStorage.getItem(noteDraftKey);
+    if (id)
+      api<NoteDraft>("/notes/" + id)
+        .then((draft) => {
+          if (draft.status === "committed") {
+            localStorage.removeItem(noteDraftKey);
+            return;
+          }
+          try {
+            const cached = JSON.parse(
+              localStorage.getItem(noteCacheKey) || "null",
+            );
+            if (
+              cached?.id === draft.id &&
+              cached.revision === draft.revision &&
+              Array.isArray(cached.items)
+            )
+              draft.items = cached.items;
+          } catch {
+            localStorage.removeItem(noteCacheKey);
+          }
+          setNote(draft);
+          setText(draft.messages[0].text);
+          setPlatform(draft.platform);
+          setAccount(draft.account);
+          setSynthetic(draft.synthetic);
+          setNoteDate(draft.reference_date);
+          setImportOpen(true);
+        })
+        .catch(() => localStorage.removeItem(noteDraftKey));
   }, []);
   useEffect(() => {
     if (chatBox.current)
@@ -257,6 +340,24 @@ function App() {
       setBusy("");
     }
   };
+  useEffect(() => {
+    if (note)
+      localStorage.setItem(
+        noteCacheKey,
+        JSON.stringify({
+          id: note.id,
+          revision: note.revision,
+          items: note.items,
+        }),
+      );
+  }, [note]);
+  useEffect(() => {
+    if (note)
+      notePreviewBox.current?.scrollIntoView({
+        block: "start",
+        behavior: "auto",
+      });
+  }, [note?.revision]);
   const latest = jobs[0];
   const filtered = rows.filter(
     (r) =>
@@ -275,6 +376,53 @@ function App() {
       );
       setTab("overview");
     });
+  const clearNote = () => {
+    setSynthetic(false);
+    setNoteDate(todayLocal());
+    setNote(null);
+    setNoteAcknowledged(false);
+    setNoteReply("");
+    setNoteEdited(false);
+    setText("");
+    setNoteRemote(false);
+    localStorage.removeItem(noteDraftKey);
+    localStorage.removeItem(noteCacheKey);
+  };
+  const editNote = (index: number, patch: Partial<NoteEntry>) => {
+    setNote(
+      (old) =>
+        old && {
+          ...old,
+          items: old.items.map((r, i) =>
+            i === index ? { ...r, ...patch } : r,
+          ),
+        },
+    );
+    setNoteEdited(true);
+    setNoteAcknowledged(false);
+  };
+  const previewNote = () =>
+    action("正在理解随记", async () => {
+      const draft = await api<NoteDraft>("/notes/preview", {
+        method: "POST",
+        body: JSON.stringify({
+          text: note ? noteReply : text,
+          platform,
+          account,
+          synthetic,
+          allow_remote: noteRemote,
+          reference_date: noteDate,
+          draft_id: note?.id,
+          revision: note?.revision,
+          items: note?.items,
+        }),
+      });
+      setNote(draft);
+      setNoteAcknowledged(false);
+      setNoteReply("");
+      setNoteEdited(false);
+      localStorage.setItem(noteDraftKey, draft.id);
+    });
   const importData = () =>
     action("正在导入并整理", async () => {
       if (!synthetic) setRemote(false);
@@ -287,20 +435,26 @@ function App() {
         f.append("synthetic", String(synthetic));
         j = await api<Job>("/import/files", { method: "POST", body: f });
       } else {
-        j = await api<Job>("/import/text", {
+        if (!note) return;
+        j = await api<Job>("/notes/" + note.id + "/commit", {
           method: "POST",
-          body: JSON.stringify({ text, platform, account, synthetic }),
+          body: JSON.stringify({
+            revision: note.revision,
+            acknowledge_questions: noteAcknowledged,
+            items: note.items,
+          }),
         });
       }
-      if (j.imported && !j.mapping_required?.length)
-        await api("/jobs/" + j.id + "/run", { method: "POST" });
+      // 保存成功后即清理草稿；后续核对失败仍可从处理记录恢复。
       setImportOpen(false);
       setFiles([]);
-      setText("");
+      clearNote();
       setNotice(
         `本批新增 ${j.imported} 条，已导入过 ${j.reimported} 条，需补充 ${j.errors.length} 行。`,
       );
       setTab(j.mapping_required?.length ? "evidence" : "overview");
+      if (j.imported && !j.mapping_required?.length)
+        await api("/jobs/" + j.id + "/run", { method: "POST" });
     });
   const answer = (q: Review, act: string, extra: Record<string, string> = {}) =>
     action("正在保存核对", async () => {
@@ -1487,6 +1641,7 @@ function App() {
             <button
               className="close"
               onClick={() => setImportOpen(false)}
+              disabled={!!busy}
               aria-label="关闭"
             >
               <X size={21} />
@@ -1495,12 +1650,13 @@ function App() {
               <Upload size={25} />
             </span>
             <h2>导入账单</h2>
-            <p className="muted">选择平台和本人账户，上传文件或粘贴文字。</p>
+            <p className="muted">上传已有账单，或用日常语言随手记一笔。</p>
             <div className="form-row">
               <label>
                 账单平台
                 <select
                   value={platform}
+                  disabled={!!note || !!busy}
                   onChange={(e) => {
                     setPlatform(e.target.value);
                     setAccount("我的" + e.target.value);
@@ -1514,6 +1670,7 @@ function App() {
                 本人账户别名
                 <input
                   value={account}
+                  disabled={!!note || !!busy}
                   onChange={(e) => setAccount(e.target.value)}
                   placeholder="如：我的微信"
                 />
@@ -1531,11 +1688,19 @@ function App() {
                 type="file"
                 multiple
                 accept=".csv,.xlsx,.png,.jpg,.jpeg"
+                disabled={!!note || !!busy}
                 onChange={(e) => setFiles(Array.from(e.target.files || []))}
               />
             </label>
             {files.length > 0 && (
               <div className="file-list">
+                <button
+                  className="text-button"
+                  disabled={!!busy}
+                  onClick={() => setFiles([])}
+                >
+                  移除文件，改用随记
+                </button>
                 {files.map((f) => (
                   <span key={f.name}>
                     <FileText size={13} />
@@ -1546,42 +1711,314 @@ function App() {
             )}
             <div className="or">
               <span />
-              或粘贴账单文字
+              或随手记账
               <span />
             </div>
+            <label className="note-input-label" htmlFor="quick-note">
+              随记内容
+            </label>
             <textarea
+              id="quick-note"
               value={text}
               onChange={(e) => setText(e.target.value)}
+              disabled={!!note || !!files.length || !!busy}
               placeholder={
-                "例如：2026-09-08 12:30 青禾面馆 支出 28.00元\n也可以粘贴带表头的 CSV 文字"
+                "比如：昨天午饭花了二十八，今天用支付宝打车十五块。\n也可以写多笔收支、退款，或粘贴账单文字。"
               }
-              rows={4}
+              rows={3}
             />
+            {!files.length && (
+              <>
+                <label className="note-date">
+                  记账日期
+                  <input
+                    type="date"
+                    value={noteDate}
+                    disabled={!!note || !!busy}
+                    onChange={(e) => setNoteDate(e.target.value)}
+                  />
+                </label>
+                <p className="note-help">
+                  未说日期时按此日记录；“今天”“昨天”也以此日为准。金额不明确会补问。
+                </p>
+                <label className="check-line note-consent">
+                  <input
+                    type="checkbox"
+                    checked={noteRemote}
+                    disabled={!!busy}
+                    onChange={(e) => setNoteRemote(e.target.checked)}
+                  />
+                  <span>
+                    允许将随记原文和后续补充发送给{" "}
+                    {config?.llm.model || "配置的模型"} 理解。文件不会发送。
+                  </span>
+                </label>
+                {!config?.llm.configured && (
+                  <p className="note-help">
+                    尚未配置模型，可先用本地解析并手动填写草稿。
+                  </p>
+                )}
+              </>
+            )}
             <label className="check-line">
               <input
                 type="checkbox"
                 checked={synthetic}
+                disabled={!!note || !!busy}
                 onChange={(e) => setSynthetic(e.target.checked)}
               />
               这是明确构造的演示数据
             </label>
+            {note && (
+              <section
+                className="note-preview"
+                aria-label="随记草稿"
+                ref={notePreviewBox}
+              >
+                <div className="note-preview-heading">
+                  <h3>待确认草稿 · {note.items.length} 笔</h3>
+                  <span>
+                    {note.mode === "api" ? "模型理解" : "本地解析"} · 尚未入账
+                  </span>
+                </div>
+                {note.warning && (
+                  <p className="note-warning" role="status">
+                    {note.warning}
+                  </p>
+                )}
+                {note.questions.length > 0 && (
+                  <div className="note-questions">
+                    <strong>
+                      {noteEdited
+                        ? "解析时的待确认项（可在下方修改解决）"
+                        : "请补充或核对"}
+                    </strong>
+                    <ul>
+                      {note.questions.map((q, i) => (
+                        <li key={i}>{q}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {note.items.map((r, i) => (
+                  <fieldset className="note-entry" key={r.id} disabled={!!busy}>
+                    <legend>
+                      第 {i + 1} 笔{" "}
+                      <span>
+                        {noteReady(r) ? "字段已齐，请核对" : "待补充"}
+                      </span>
+                    </legend>
+                    <div className="note-fields">
+                      <label className="note-wide">
+                        用途 / 交易对方
+                        <input
+                          value={r.merchant}
+                          placeholder="如：午饭、打车、某商户"
+                          onChange={(e) =>
+                            editNote(i, { merchant: e.target.value })
+                          }
+                        />
+                      </label>
+                      <label>
+                        金额（元）
+                        <input
+                          inputMode="decimal"
+                          value={r.amount_yuan ?? ""}
+                          placeholder="请输入金额"
+                          onChange={(e) =>
+                            editNote(i, { amount_yuan: e.target.value || null })
+                          }
+                        />
+                      </label>
+                      <label>
+                        收支
+                        <select
+                          value={r.direction ?? ""}
+                          onChange={(e) =>
+                            editNote(i, {
+                              direction: e.target.value || null,
+                              kind:
+                                e.target.value === "收入" && r.kind === "消费"
+                                  ? "收入"
+                                  : e.target.value === "支出" &&
+                                      r.kind === "收入"
+                                    ? "消费"
+                                    : r.kind,
+                            })
+                          }
+                        >
+                          <option value="">请选择</option>
+                          <option>支出</option>
+                          <option>收入</option>
+                          <option>不计收支</option>
+                        </select>
+                      </label>
+                      <label>
+                        日期
+                        <input
+                          type="date"
+                          value={r.date ?? ""}
+                          onChange={(e) =>
+                            editNote(i, { date: e.target.value || null })
+                          }
+                        />
+                      </label>
+                      <label>
+                        支付平台
+                        <select
+                          value={r.platform ?? ""}
+                          onChange={(e) =>
+                            editNote(i, {
+                              platform: e.target.value,
+                              account: "我的" + e.target.value,
+                            })
+                          }
+                        >
+                          <option>微信</option>
+                          <option>支付宝</option>
+                        </select>
+                      </label>
+                    </div>
+                    <details className="note-more">
+                      <summary>交易类型、账户和原文依据</summary>
+                      <div className="note-fields">
+                        <label>
+                          类型
+                          <select
+                            value={r.kind}
+                            onChange={(e) =>
+                              editNote(i, {
+                                kind: e.target.value,
+                                direction: ["退款", "收入"].includes(
+                                  e.target.value,
+                                )
+                                  ? "收入"
+                                  : r.direction,
+                              })
+                            }
+                          >
+                            <option>消费</option>
+                            <option>收入</option>
+                            <option>退款</option>
+                            <option>转账</option>
+                          </select>
+                        </label>
+                        <label>
+                          时间（可空）
+                          <input
+                            type="time"
+                            value={r.time ?? ""}
+                            onChange={(e) =>
+                              editNote(i, { time: e.target.value || null })
+                            }
+                          />
+                        </label>
+                        <label className="note-wide">
+                          本人账户
+                          <input
+                            value={r.account}
+                            onChange={(e) =>
+                              editNote(i, { account: e.target.value })
+                            }
+                          />
+                        </label>
+                      </div>
+                      <p>
+                        原文：
+                        {r.evidence || "未定位到具体片段，请对照上方随记确认"}
+                      </p>
+                    </details>
+                    <button
+                      className="text-button note-remove"
+                      onClick={() => {
+                        setNote({
+                          ...note,
+                          items: note.items.filter((_, index) => index !== i),
+                        });
+                        setNoteEdited(true);
+                      }}
+                    >
+                      移除此笔
+                    </button>
+                  </fieldset>
+                ))}
+                <label className="note-input-label" htmlFor="note-reply">
+                  继续补充或更正
+                </label>
+                <textarea
+                  id="note-reply"
+                  value={noteReply}
+                  disabled={!!busy}
+                  onChange={(e) => setNoteReply(e.target.value)}
+                  placeholder="比如：第一笔是18块，第二笔用微信；退款是昨天到账的。"
+                  rows={2}
+                />
+                <div className="note-actions">
+                  <button
+                    className="button secondary"
+                    disabled={!!busy || !noteReply.trim()}
+                    onClick={previewNote}
+                  >
+                    根据补充更新草稿
+                  </button>
+                  <button
+                    className="text-button"
+                    disabled={!!busy}
+                    onClick={clearNote}
+                  >
+                    重新写一条
+                  </button>
+                </div>
+                <p className="note-help">
+                  草稿保存在本机，刷新可恢复。确认后才进入分类、退款匹配和异常核对。
+                </p>
+                {note.questions.length > 0 && (
+                  <label className="check-line">
+                    <input
+                      type="checkbox"
+                      checked={noteAcknowledged}
+                      disabled={!!busy}
+                      onChange={(e) => setNoteAcknowledged(e.target.checked)}
+                    />
+                    我已核对上述问题，确认仅保存以上所列交易。
+                  </label>
+                )}
+              </section>
+            )}
+            {error && (
+              <p className="note-warning" role="alert">
+                {error}
+              </p>
+            )}
             <div className="import-note">
               <ShieldCheck size={16} />
-              文件和原始截图保存在本机，不会上传到公开仓库。
+              原始文件保存在本机，随记仅在勾选允许后发送模型。
             </div>
             <button
               className="button primary full"
               disabled={
-                !!busy || (!files.length && !text.trim()) || !account.trim()
+                !!busy ||
+                !account.trim() ||
+                (!files.length &&
+                  (!text.trim() ||
+                    !noteDate ||
+                    (!!note &&
+                      (!note.items.length ||
+                        !note.items.every(noteReady) ||
+                        (note.questions.length > 0 && !noteAcknowledged)))))
               }
-              onClick={importData}
+              onClick={files.length || note ? importData : previewNote}
             >
               {busy ? (
                 <LoaderCircle className="spin" size={16} />
               ) : (
                 <Sparkles size={17} />
               )}
-              导入并开始整理
+              {files.length
+                ? "导入并开始整理"
+                : note
+                  ? `确认这 ${note.items.length} 笔并入账`
+                  : "理解并生成草稿"}
             </button>
             <button
               className="demo-button"

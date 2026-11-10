@@ -14,12 +14,12 @@ from fastapi.responses import FileResponse, Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import storage as db
-from .schema import TextInput, ReviewAnswer, ChatInput, MappingInput, LedgerPatch, CATEGORIES, Transaction
+from .schema import TextInput, ReviewAnswer, ChatInput, MappingInput, LedgerPatch, CATEGORIES, Transaction, NoteInput, NoteCommit
 from .intake import parse_table, parse_text, parse_image, MappingRequired
 from .reconcile import summary
 from .quality import inspect_records, SKILL
 from .ml import bundle, text_of
-from . import llm
+from . import llm, notes
 from .workflow import run, LOCK
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -75,7 +75,7 @@ def config():
     load_dotenv(ROOT/'.env',override=True)
     ready=(ROOT/'models/active.joblib').exists()
     return dict(llm=llm.status(),categories=CATEGORIES,model=dict(ready=ready,version=bundle()['version'] if ready else None),
-        real_sample_validation=False,privacy='原始真实账单仅保存在本地；外部模型默认禁用，需显式允许发送脱敏摘要。')
+        real_sample_validation=False,privacy='原始文件仅本地处理；对话发送脱敏摘要，随记解析发送输入原文，两者均须单独勾选允许。')
 
 
 @app.get('/api/jobs')
@@ -93,12 +93,31 @@ def job(id:str):
 @app.post('/api/import/text')
 def import_text(body:TextInput):
     rows,errors=parse_text(body.text,body.platform,body.account)
-    # 仅明确构造输入允许自动调用远端结构化工具。
-    if not rows and body.synthetic and llm.status()['configured']:
-        result=llm.call_json([{'role':'system','content':'将构造账单文字提取为 JSON {"lines": ["YYYY-MM-DD HH:MM 商户 支出 12.30元"]}。不得补造日期金额。缺字段放入 errors。'}, {'role':'user','content':body.text}])
-        if isinstance(result.get('lines'),list):
-            rows,errors=parse_text('\n'.join(str(v) for v in result['lines']),body.platform,body.account)
     return job_with_rows(rows,errors,'文字账单',body.synthetic)
+
+
+@app.post('/api/notes/preview')
+def preview_note(body:NoteInput):
+    return notes.preview(body)
+
+
+@app.get('/api/notes/{id}')
+def get_note(id:str):
+    return require('notes',id)
+
+
+@app.post('/api/notes/{id}/commit')
+@db.transactional
+def commit_note(id:str,body:NoteCommit):
+    draft=require('notes',id)
+    if draft['status']=='committed':return require('jobs',draft['job_id'])
+    rows=notes.confirmed_rows(draft,body)
+    job=job_with_rows(rows,[],'随手记账',draft['synthetic'],dict(note_id=id))
+    job['trace'].append(dict(stage='note_confirmed',message=f'模型/本地草稿经人工确认后入账，共{len(rows)}笔',time=db.now()))
+    db.save('jobs',job)
+    draft.update(status='committed',job_id=job['id'],acknowledge_questions=body.acknowledge_questions,confirmed_items=[r.model_dump(mode='json') for r in body.items],confirmed_at=db.now())
+    db.save('notes',draft)
+    return job
 
 
 @app.post('/api/import/files')

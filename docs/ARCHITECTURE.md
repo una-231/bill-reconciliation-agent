@@ -34,7 +34,10 @@ flowchart LR
 |---|---|---|
 |GET /api/config|无|模型版本、密钥是否就绪、费用；不返回密钥|
 |POST /api/import/files|multipart文件、platform、account、synthetic|任务、错误行、OCR原文或待映射列|
-|POST /api/import/text|text、platform、account、synthetic|本批任务|
+|POST /api/import/text|标准格式text、platform、account、synthetic|兼容旧客户端的本地文字导入，不自动调用API|
+|POST /api/notes/preview|text、reference_date、allow_remote，可选draft_id/revision/items|模型或本地随记草稿、待补问题，不写账本|
+|GET /api/notes/{id}|草稿ID|恢复草稿与原文|
+|POST /api/notes/{id}/commit|revision、items、acknowledge_questions|严格校验并人工确认入账；重复提交返回同一任务|
 |POST /api/jobs/{id}/mapping/{token}|标准字段到原始列名的mapping|映射后任务|
 |POST /api/jobs/{id}/run|任务ID|启动图并返回任务状态|
 |GET /api/jobs/{id}|任务ID|状态、轨迹与批次汇总|
@@ -54,3 +57,10 @@ ReviewAnswer的action只允许confirm、category、link、keep、exclude；退�
 解析失败的行连同原因保留；未知表头由用户映射。截图OCR逐项确认。类别置信度、匹配分数不足或存在候选歧义时进入核对；退款超额不会自动入账。接口超时回退本地工具并显示原因，预算耗尽停止外部请求。历史不足30条此前月份消费时不拟合历史异常模型；异常提示不作欺诈结论。
 
 本地版本不提供支付、转账、账户登录或云端多人服务。服务只绑定127.0.0.1，不应直接暴露到公网。
+
+
+## 随手记账
+
+`backend/notes.py`把非标准口语转换成受约束的NoteEntry，Pydantic与Decimal检查金额、日期、方向和类型。模型只能返回结构化草稿，无执行工具或修改账本权限。用户允许后发送原文与补充，未授权时仅本地解析；synthetic标记不会代替发送许可。外部请求受输入长度、最大输出及预算约束；补充最多5轮、单次最多10笔。
+
+SQLite的notes表保存原文对话、模型草稿、修订号和确认结果；浏览器缓存尚未提交的字段编辑。并发补充检查版本；确认入账与任务创建共用事务，交易ID由草稿与行ID固定派生，重复确认不会新增。未填写具体时间时保留日级精度标记；退款与收入方向不一致、金额缺失等不能保存。模型仍有问题时默认阻止保存，用户手动解决后须明确确认仅保存所列交易。确认后进入既有LangGraph核对流程。

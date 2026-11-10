@@ -74,6 +74,7 @@ def init():
     with connect() as c:
         c.executescript('''
         CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY, data TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS notes(id TEXT PRIMARY KEY, data TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS transactions(id TEXT PRIMARY KEY, job_id TEXT, data TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS reviews(id TEXT PRIMARY KEY, job_id TEXT, tx_id TEXT, data TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY, job_id TEXT, tx_id TEXT, data TEXT NOT NULL);
@@ -84,11 +85,11 @@ def init():
 
 
 def save(table, item, job_id=None, tx_id=None):
-    if table not in {'jobs', 'transactions', 'reviews', 'events'}:
+    if table not in {'jobs', 'notes', 'transactions', 'reviews', 'events'}:
         raise ValueError('未知数据表')
     columns = ['id', 'data']
     values = [item['id'], dumps(item)]
-    if table != 'jobs':
+    if table not in {'jobs', 'notes'}:
         columns += ['job_id']
         values += [job_id or item.get('job_id')]
     if table in {'reviews', 'events'}:
@@ -99,7 +100,7 @@ def save(table, item, job_id=None, tx_id=None):
 
 
 def get(table, id):
-    if table not in {'jobs', 'transactions', 'reviews', 'events'}:
+    if table not in {'jobs', 'notes', 'transactions', 'reviews', 'events'}:
         raise ValueError('未知数据表')
     with connect() as c:
         row = c.execute(f'SELECT data FROM {table} WHERE id=?', (id,)).fetchone()
@@ -107,7 +108,7 @@ def get(table, id):
 
 
 def all_items(table, job_id=None):
-    if table not in {'jobs', 'transactions', 'reviews', 'events'}:
+    if table not in {'jobs', 'notes', 'transactions', 'reviews', 'events'}:
         raise ValueError('未知数据表')
     with connect() as c:
         rows = c.execute(f'SELECT data FROM {table}' + (' WHERE job_id=?' if job_id else ''), (job_id,) if job_id else ()).fetchall()

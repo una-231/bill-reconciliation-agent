@@ -27,7 +27,9 @@ def status():
         spent_cny=round(cost,6),budget_cny=float(os.getenv('LLM_BUDGET_CNY','5')),calls=count)
 
 
-def call_json(messages):
+def call_json(messages, max_tokens=1600):
+    if type(max_tokens) is not int or not 1 <= max_tokens <= 3200:
+        raise ValueError("输出长度须在1至3200tokens内")
     key=os.getenv('LLM_API_KEY')
     if not key:raise ValueError('尚未配置本地 LLM_API_KEY')
     inp,out=pricing()
@@ -35,7 +37,7 @@ def call_json(messages):
     input_upper=len(json.dumps(messages,ensure_ascii=False).encode('utf-8'))+1024
     if input_upper>int(os.getenv('LLM_MAX_INPUT_TOKENS','30000')):
         raise ValueError('本次输入超过当前计费档的长度限制，请缩短或分批处理')
-    reserve=(input_upper*inp+1600*out)/1e6
+    reserve=(input_upper*inp+max_tokens*out)/1e6
     request_id=uid()
     with connect() as c:
         c.execute('BEGIN IMMEDIATE')
@@ -45,7 +47,7 @@ def call_json(messages):
         c.execute('INSERT INTO usage VALUES(?,?,?)',(request_id,reserve,dumps(dict(status='reserved',time=now()))))
     model=os.getenv('LLM_MODEL','qwen-flash')
     try:
-        payload=dict(model=model,messages=messages,max_tokens=1600,temperature=.1,response_format={'type':'json_object'})
+        payload=dict(model=model,messages=messages,max_tokens=max_tokens,temperature=.1,response_format={'type':'json_object'})
         thinking=os.getenv('LLM_ENABLE_THINKING')
         if thinking is not None:
             if thinking.lower() not in ['true','false']:raise ValueError('LLM_ENABLE_THINKING须为true或false')

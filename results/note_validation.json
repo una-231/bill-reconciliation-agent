@@ -1,0 +1,277 @@
+{
+  "data_source": "明确构造的随记，不含真实账单",
+  "first_preview": {
+    "id": "c9f2c510d9d4468888b9805161fac02d",
+    "status": "preview",
+    "revision": 1,
+    "created_at": "2026-11-10T10:06:31.461134+00:00",
+    "updated_at": "2026-11-10T10:06:31.461134+00:00",
+    "platform": "微信",
+    "account": "我的微信",
+    "synthetic": true,
+    "reference_date": "2026-11-10",
+    "messages": [
+      {
+        "text": "构造随记：昨天午饭花了二十八块，支付宝付的。今天微信买早餐，忘了写金额。"
+      }
+    ],
+    "items": [
+      {
+        "id": "1a34b7390136418c872d032066135a4f",
+        "date": "2026-11-09",
+        "time": null,
+        "merchant": "午饭",
+        "amount_yuan": "28.00",
+        "direction": "支出",
+        "kind": "消费",
+        "platform": "支付宝",
+        "account": "我的支付宝",
+        "description": "昨天午饭花了二十八块，支付宝付的",
+        "evidence": "昨天午饭花了二十八块，支付宝付的"
+      }
+    ],
+    "questions": [
+      "今天微信买早餐的金额是多少？"
+    ],
+    "mode": "api",
+    "warning": "",
+    "consent": true
+  },
+  "first_preview_limitation": "模型只列出完整的午饭，并补问早餐金额；未自动入账。后端与前端均已补上待确认问题的保存校验。",
+  "success": true,
+  "final_preview": {
+    "id": "c9f2c510d9d4468888b9805161fac02d",
+    "status": "preview",
+    "revision": 2,
+    "created_at": "2026-11-10T10:06:31.461134+00:00",
+    "updated_at": "2026-11-10T10:10:14.545678+00:00",
+    "platform": "微信",
+    "account": "我的微信",
+    "synthetic": true,
+    "reference_date": "2026-11-10",
+    "messages": [
+      {
+        "text": "构造随记：昨天午饭花了二十八块，支付宝付的。今天微信买早餐，忘了写金额。"
+      },
+      {
+        "text": "早餐花了十二块五，第一笔午饭其实是三十块，仍然是支付宝付的。"
+      }
+    ],
+    "items": [
+      {
+        "id": "1a34b7390136418c872d032066135a4f",
+        "date": "2026-11-09",
+        "time": null,
+        "merchant": "午饭",
+        "amount_yuan": "30.00",
+        "direction": "支出",
+        "kind": "消费",
+        "platform": "支付宝",
+        "account": "我的支付宝",
+        "description": "昨天午饭花了二十八块，支付宝付的。早餐花了十二块五，第一笔午饭其实是三十块，仍然是支付宝付的。",
+        "evidence": "第一笔午饭其实是三十块"
+      },
+      {
+        "id": "c747a0a3aa3d458cabdb55c0fb26f8b5",
+        "date": "2026-11-10",
+        "time": null,
+        "merchant": "早餐",
+        "amount_yuan": "12.50",
+        "direction": "支出",
+        "kind": "消费",
+        "platform": "微信",
+        "account": "我的微信",
+        "description": "今天微信买早餐...早餐花了十二块五",
+        "evidence": "今天微信买早餐...早餐花了十二块五"
+      }
+    ],
+    "questions": [],
+    "mode": "api",
+    "warning": "",
+    "consent": true
+  },
+  "commit_verification": {
+    "imported": 2,
+    "repeated_commit_same_job": true,
+    "sum_amount_cents": 4250,
+    "workflow_status": "complete",
+    "ledger": {
+      "rows": [
+        {
+          "id": "05b97f44ed0e5ceecdb7289c",
+          "platform": "微信",
+          "account": "我的微信",
+          "time": "2026-11-10T00:00:00",
+          "direction": "支出",
+          "amount": 1250,
+          "merchant": "早餐",
+          "description": "今天微信买早餐...早餐花了十二块五",
+          "order_id": "",
+          "reference": "",
+          "status": "成功",
+          "kind": "消费",
+          "category": "餐饮",
+          "confidence": 0.903564296701852,
+          "excluded": false,
+          "linked_id": "",
+          "review_status": "已核对",
+          "sources": [
+            {
+              "file": "随手记账",
+              "draft_id": "c9f2c510d9d4468888b9805161fac02d",
+              "row": 2
+            }
+          ],
+          "raw": {
+            "note_messages": [
+              {
+                "text": "构造随记：昨天午饭花了二十八块，支付宝付的。今天微信买早餐，忘了写金额。"
+              },
+              {
+                "text": "早餐花了十二块五，第一笔午饭其实是三十块，仍然是支付宝付的。"
+              }
+            ],
+            "reference_date": "2026-11-10",
+            "evidence": "今天微信买早餐...早餐花了十二块五",
+            "time_precision": "day",
+            "confirmed_at": "2026-11-10T10:11:28.534555+00:00",
+            "parsed": {
+              "id": "c747a0a3aa3d458cabdb55c0fb26f8b5",
+              "date": "2026-11-10",
+              "time": null,
+              "merchant": "早餐",
+              "amount_yuan": "12.50",
+              "direction": "支出",
+              "kind": "消费",
+              "platform": "微信",
+              "account": "我的微信",
+              "description": "今天微信买早餐...早餐花了十二块五",
+              "evidence": "今天微信买早餐...早餐花了十二块五"
+            }
+          },
+          "job_id": "01372467ff3644e5b073fb05e848991b",
+          "synthetic": true
+        },
+        {
+          "id": "0fded971449e729ec595bdf8",
+          "platform": "支付宝",
+          "account": "我的支付宝",
+          "time": "2026-11-09T00:00:00",
+          "direction": "支出",
+          "amount": 3000,
+          "merchant": "午饭",
+          "description": "昨天午饭花了二十八块，支付宝付的。早餐花了十二块五，第一笔午饭其实是三十块，仍然是支付宝付的。",
+          "order_id": "",
+          "reference": "",
+          "status": "成功",
+          "kind": "消费",
+          "category": "餐饮",
+          "confidence": 0.5660674913937133,
+          "excluded": false,
+          "linked_id": "",
+          "review_status": "已核对",
+          "sources": [
+            {
+              "file": "随手记账",
+              "draft_id": "c9f2c510d9d4468888b9805161fac02d",
+              "row": 1
+            }
+          ],
+          "raw": {
+            "note_messages": [
+              {
+                "text": "构造随记：昨天午饭花了二十八块，支付宝付的。今天微信买早餐，忘了写金额。"
+              },
+              {
+                "text": "早餐花了十二块五，第一笔午饭其实是三十块，仍然是支付宝付的。"
+              }
+            ],
+            "reference_date": "2026-11-10",
+            "evidence": "第一笔午饭其实是三十块",
+            "time_precision": "day",
+            "confirmed_at": "2026-11-10T10:11:28.534555+00:00",
+            "parsed": {
+              "id": "1a34b7390136418c872d032066135a4f",
+              "date": "2026-11-09",
+              "time": null,
+              "merchant": "午饭",
+              "amount_yuan": "30.00",
+              "direction": "支出",
+              "kind": "消费",
+              "platform": "支付宝",
+              "account": "我的支付宝",
+              "description": "昨天午饭花了二十八块，支付宝付的。早餐花了十二块五，第一笔午饭其实是三十块，仍然是支付宝付的。",
+              "evidence": "第一笔午饭其实是三十块"
+            }
+          },
+          "job_id": "01372467ff3644e5b073fb05e848991b",
+          "synthetic": true
+        }
+      ],
+      "summary": {
+        "count": 2,
+        "confirmed": 2,
+        "pending": 0,
+        "excluded": 0,
+        "expense": 4250,
+        "refund": 0,
+        "net": 4250,
+        "income": 0,
+        "categories": [
+          {
+            "name": "餐饮",
+            "value": 4250
+          }
+        ],
+        "months": [
+          {
+            "month": "2026-11",
+            "expense": 4250,
+            "refund": 0,
+            "net": 4250
+          }
+        ],
+        "changes": [],
+        "history_note": "至少30条此前月份消费才启用历史异常检测；月份变化受导入覆盖范围影响"
+      }
+    },
+    "isolated_database": true
+  },
+  "model": "qwen3.7-flash",
+  "usage": [
+    {
+      "cost_cny": 0.00036920000000000003,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 650,
+        "total_tokens": 949,
+        "completion_tokens": 299,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 650
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T10:10:14.542008+00:00"
+    },
+    {
+      "cost_cny": 0.00020860000000000003,
+      "model": "qwen3.7-flash",
+      "usage": {
+        "prompt_tokens": 455,
+        "total_tokens": 602,
+        "completion_tokens": 147,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 455
+        }
+      },
+      "status": "completed",
+      "time": "2026-11-10T10:06:31.449959+00:00"
+    }
+  ],
+  "estimated_cost_cny": 0.0005778,
+  "total_project_estimated_cost_cny": 0.007148,
+  "calls_in_script": 0,
+  "free_quota": "用户声明有1M免费额度；此处为抵扣前估算，实际计费以平台为准"
+}

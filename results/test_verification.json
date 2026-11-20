@@ -1,8 +1,9 @@
 {
   "command": "python -m pytest -q --tb=short",
-  "passed": 36,
+  "passed": 48,
   "failed": 0,
-  "seconds": 8.81,
+  "seconds": 24.84,
   "frontend_build": "npm run build passed",
-  "note": "来自本轮实际运行；PyCharm早期截图为31项，后续新增5项测试"
+  "note": "本轮实际运行48项回归测试通过；PyCharm早期截图为31项，不改写旧截图内容。前端构建沿用随记功能验收记录，本轮未修改应用源码。",
+  "verified_on": "2026-11-20"
 }

@@ -147,7 +147,7 @@ def parse_text(text, platform, account):
 _ocr = None
 
 
-def parse_screenshot_list(extracted, content, filename, platform, account, reference_date=None):
+def screenshot_blocks(extracted):
     lines = extracted.splitlines()
     header = next((i for i, line in enumerate(lines)
         if re.search(r'(?:20\d{2}年)?\d{1,2}月', line) and not re.search(r'\d{1,2}日', line)), None)
@@ -157,17 +157,27 @@ def parse_screenshot_list(extracted, content, filename, platform, account, refer
     signed = re.compile(r'([+\-−－–])\s*(\d+\.\d{2})\s*$')
     if sum(bool(signed.search(line)) for line in body) < 2:
         return None
-    year_match = re.search(r'(20\d{2})年', lines[header])
+    starts = [i for i, line in enumerate(body) if signed.search(line)
+        or re.search(r'\d+\.\d+[-+]\s*$', line)]
+    return lines[header], [(header + start + 2,
+        body[start:starts[n + 1] if n + 1 < len(starts) else len(body)])
+        for n, start in enumerate(starts)]
+
+
+def parse_screenshot_list(extracted, content, filename, platform, account, reference_date=None):
+    grouped = screenshot_blocks(extracted)
+    if grouped is None:
+        return None
+    header, blocks = grouped
+    header_index = extracted.splitlines().index(header)
+    signed = re.compile(r'([+\-−－–])\s*(\d+\.\d{2})\s*$')
+    year_match = re.search(r'(20\d{2})年', header)
     context = Date.fromisoformat(str(reference_date)) if reference_date else None
     year = int(year_match[1]) if year_match else (context.year if context else None)
     digest = hashlib.sha256(content).hexdigest()
-    starts = [i for i, line in enumerate(body) if signed.search(line)
-        or re.search(r'\d+\.\d+[-+]\s*$', line)]
     rows, errors = [], []
-    for n, start in enumerate(starts):
-        block = body[start:starts[n + 1] if n + 1 < len(starts) else len(body)]
+    for row_number, block in blocks:
         raw = {'ocr_block': '\n'.join(block), 'reference_date': str(reference_date or '')}
-        row_number = header + start + 2
         try:
             amount = signed.search(block[0])
             if not amount:
@@ -194,6 +204,8 @@ def parse_screenshot_list(extracted, content, filename, platform, account, refer
             direction = '收入' if amount[1] == '+' else '支出'
             kind = '退款' if '退款' in merchant and direction == '收入' else (
                 '转账' if '转账' in merchant else ('消费' if direction == '支出' else '收入'))
+            # 保持既有截图记录ID，重复导入仍能识别。
+            start = row_number - header_index - 2
             tx = Transaction(id=hashlib.sha256(f'{digest}:{start}:{timestamp.isoformat()}'.encode()).hexdigest()[:24],
                 platform=platform, account=account, time=timestamp.isoformat(), direction=direction,
                 amount=cents(amount[2]), merchant=merchant, description=merchant, kind=kind,

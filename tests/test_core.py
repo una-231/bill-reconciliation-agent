@@ -182,6 +182,22 @@ def test_ocr_mandatory_review():
     rows,qs=analyze([r],'j');assert any(q['kind']=='ocr' for q in qs)
 
 
+def test_image_reference_date_validated_and_passed(client,monkeypatch):
+    from datetime import date
+    seen=[]
+    def image(content,filename,platform,account,reference_date):
+        seen.append(reference_date)
+        return [tx('screenshot')],[], 'constructed OCR', .9
+    monkeypatch.setattr('backend.main.parse_image',image)
+    data=dict(platform='微信',account='我的微信',reference_date='2025-08-16')
+    result=client.post('/api/import/files',data=data,files={'files':('constructed.jpg',b'constructed','image/jpeg')})
+    assert result.status_code==200 and result.json()['imported']==1
+    assert seen==[date(2025,8,16)]
+    assert db.get('transactions','screenshot')['ocr_review_required']
+    data['reference_date']='not-a-date'
+    assert client.post('/api/import/files',data=data,files={'files':('constructed.jpg',b'constructed','image/jpeg')}).status_code==422
+
+
 def test_truth_fields_not_imported():
     raw='交易时间,金额,收/支,交易对方,truth_category,split\n2026-09-01,12,支出,商店,教育,test'
     rows,_=parse_table(raw.encode(),'x.csv','微信','我')

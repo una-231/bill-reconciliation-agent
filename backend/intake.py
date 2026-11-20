@@ -2,7 +2,7 @@ import csv
 import hashlib
 import io
 import re
-from datetime import datetime
+from datetime import date as Date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -147,7 +147,65 @@ def parse_text(text, platform, account):
 _ocr = None
 
 
-def parse_image(content, filename, platform, account):
+def parse_screenshot_list(extracted, content, filename, platform, account, reference_date=None):
+    lines = extracted.splitlines()
+    header = next((i for i, line in enumerate(lines)
+        if re.search(r'(?:20\d{2}年)?\d{1,2}月', line) and not re.search(r'\d{1,2}日', line)), None)
+    if header is None:
+        return None
+    body = lines[header + 1:]
+    signed = re.compile(r'([+\-−－–])\s*(\d+\.\d{2})\s*$')
+    if sum(bool(signed.search(line)) for line in body) < 2:
+        return None
+    year_match = re.search(r'(20\d{2})年', lines[header])
+    context = Date.fromisoformat(str(reference_date)) if reference_date else None
+    year = int(year_match[1]) if year_match else (context.year if context else None)
+    digest = hashlib.sha256(content).hexdigest()
+    starts = [i for i, line in enumerate(body) if signed.search(line)
+        or re.search(r'\d+\.\d+[-+]\s*$', line)]
+    rows, errors = [], []
+    for n, start in enumerate(starts):
+        block = body[start:starts[n + 1] if n + 1 < len(starts) else len(body)]
+        raw = {'ocr_block': '\n'.join(block), 'reference_date': str(reference_date or '')}
+        row_number = header + start + 2
+        try:
+            amount = signed.search(block[0])
+            if not amount:
+                raise ValueError('金额或正负号识别不可靠，请补充交易详情或清晰截图')
+            merchant = block[0][:amount.start()].strip()
+            merchant = re.sub(r'^(?:闪购|美团|淘宝|收银通|业发|收)\s+', '', merchant)
+            if not merchant:
+                raise ValueError('缺少商户，请补充交易详情')
+            detail = '\n'.join(block[1:])
+            clock = re.search(r'(\d{1,2}):(\d{2})', detail)
+            month_day = re.search(r'(\d{1,2})(?:月|-)(\d{1,2})(?:日|(?=\s|\d{1,2}:))', detail)
+            relative = re.search(r'(今天|昨天|前天)', detail)
+            if not clock or not (month_day or relative):
+                raise ValueError('交易时间被截断或缺失，请补充完整截图')
+            if relative:
+                if not context:
+                    raise ValueError('相对日期需要截图拍摄日期，不能使用导入当天代替')
+                day = context - timedelta(days={'今天': 0, '昨天': 1, '前天': 2}[relative[1]])
+            else:
+                if year is None:
+                    raise ValueError('截图未显示年份，请填写截图拍摄日期以确认年份')
+                day = Date(year, int(month_day[1]), int(month_day[2]))
+            timestamp = datetime.combine(day, datetime.strptime(f'{clock[1]}:{clock[2]}', '%H:%M').time())
+            direction = '收入' if amount[1] == '+' else '支出'
+            kind = '退款' if '退款' in merchant and direction == '收入' else (
+                '转账' if '转账' in merchant else ('消费' if direction == '支出' else '收入'))
+            tx = Transaction(id=hashlib.sha256(f'{digest}:{start}:{timestamp.isoformat()}'.encode()).hexdigest()[:24],
+                platform=platform, account=account, time=timestamp.isoformat(), direction=direction,
+                amount=cents(amount[2]), merchant=merchant, description=merchant, kind=kind,
+                sources=[dict(file=filename, row=row_number, sha256=digest, ocr=True)], raw=raw).model_dump()
+            tx['ocr_review_required'] = True
+            rows.append(tx)
+        except ValueError as exc:
+            errors.append(dict(row=row_number, error=str(exc), raw=raw))
+    return rows, errors
+
+
+def parse_image(content, filename, platform, account, reference_date=None):
     global _ocr
     from PIL import Image
     import numpy as np
@@ -173,8 +231,9 @@ def parse_image(content, filename, platform, account):
             else:lines.append(dict(y=y,h=h,parts=[(x,txt)]))
         extracted='\n'.join(' '.join(t for _,t in sorted(line['parts'])) for line in lines)
     else:extracted='\n'.join(texts)
-    rows, errors = parse_text(extracted, platform, account)
-    if not rows:
+    listed = parse_screenshot_list(extracted, content, filename, platform, account, reference_date)
+    rows, errors = listed if listed is not None else parse_text(extracted, platform, account)
+    if not rows and listed is None:
         # 详情页仅在唯一日期、唯一金额和明确交易对方均存在时拼接。
         date=re.findall(r'20\d{2}[-/]\d{1,2}[-/]\d{1,2}(?:\s+\d{1,2}:\d{2}(?::\d{2})?)?',extracted)
         amount=re.findall(r'[¥￥]\s*\d+(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?\s*元',extracted)
@@ -183,6 +242,8 @@ def parse_image(content, filename, platform, account):
         if len(date)==len(amount)==1 and merchant and direction:
             rows,errors=parse_text(f'{date[0]} {merchant.group(1)} {direction} {amount[0]}',platform,account)
     for r in rows:
-        r['sources'] = [dict(file=filename, ocr=True, min_confidence=float(min(scores)) if scores else 0)]
-        r['raw'] = {'ocr_text': extracted}
+        for source in r['sources']:
+            source.update(file=filename, ocr=True, sha256=hashlib.sha256(content).hexdigest(),
+                min_confidence=float(min(scores)) if scores else 0)
+        r['raw']['ocr_text'] = extracted
     return rows, errors, extracted, float(min(scores)) if scores else 0

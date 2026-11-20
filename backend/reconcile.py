@@ -54,7 +54,7 @@ def analyze(records, job_id, use_matching=True, use_review=True, use_quality=Tru
             if r['kind']=='退款':
                 exact=[x for x in rows if r.get('reference') and x.get('order_id')==r['reference'] and x['account']==r['account'] and x['kind']=='消费' and not x.get('excluded') and x['time']<=r['time']]
                 target=exact[0] if len(exact)==1 else None
-                if target is None and rank and rank[0]['score']>=b['match_thresholds']['refund'] and (len(rank)<2 or rank[0]['score']-rank[1]['score']>.15):
+                if target is None and not r.get('ocr_review_required') and rank and rank[0]['score']>=b['match_thresholds']['refund'] and (len(rank)<2 or rank[0]['score']-rank[1]['score']>.15):
                     target=lookup[rank[0]['id']]
                 if target:
                     refunded=sum(x['amount'] for x in rows if x['id']!=r['id'] and x['kind']=='退款' and x.get('linked_id')==target['id'] and not x.get('excluded'))
@@ -77,6 +77,11 @@ def analyze(records, job_id, use_matching=True, use_review=True, use_quality=Tru
         elif use_matching and r['direction']=='支出' and not r.get('excluded'):
             rank=rank_matches(r,rows)
             possible=[x for x in rank if x['score']>=.25 and x['id'] in lookup and lookup[x['id']]['time']<=r['time']]
+            if r.get('ocr_review_required'):
+                overlap=[x for x in rows if x['id']!=r['id'] and x.get('ocr_review_required')
+                    and x['platform']==r['platform'] and x['account']==r['account']
+                    and (x['time'],x['amount'],x['direction'],x['merchant'])==(r['time'],r['amount'],r['direction'],r['merchant'])]
+                possible = possible or [dict(id=x['id'],score=1.0,relation='duplicate') for x in overlap]
             if possible and not r.get('order_id'):
                 ask(r,'duplicate','存在同额近时记录，请核对是否重复；同额不等于同订单',possible)
     for r in rows:

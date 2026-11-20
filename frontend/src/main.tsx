@@ -246,6 +246,7 @@ function App() {
   const [synthetic, setSynthetic] = useState(false);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [screenshotDate, setScreenshotDate] = useState("");
   const [note, setNote] = useState<NoteDraft | null>(null);
   const [noteRemote, setNoteRemote] = useState(false);
   const [noteReply, setNoteReply] = useState("");
@@ -433,6 +434,7 @@ function App() {
         f.append("platform", platform);
         f.append("account", account);
         f.append("synthetic", String(synthetic));
+        if (screenshotDate) f.append("reference_date", screenshotDate);
         j = await api<Job>("/import/files", { method: "POST", body: f });
       } else {
         if (!note) return;
@@ -1708,6 +1710,14 @@ function App() {
                   </span>
                 ))}
               </div>
+            )}
+            {files.some((f) => /\.(png|jpe?g)$/i.test(f.name)) && (
+              <label>
+                截图拍摄日期
+                <input type="date" value={screenshotDate} disabled={!!busy}
+                  onChange={(e) => setScreenshotDate(e.target.value)} />
+                <span className="muted">截图缺少年份或显示“昨天”时填写；不同拍摄日期请分批导入。</span>
+              </label>
             )}
             <div className="or">
               <span />

@@ -3,6 +3,7 @@ import io
 import json
 import os
 import threading
+from datetime import date as Date
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import quote
@@ -121,7 +122,7 @@ def commit_note(id:str,body:NoteCommit):
 
 
 @app.post('/api/import/files')
-async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微信'),account:str=Form('我的微信'),synthetic:bool=Form(False)):
+async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微信'),account:str=Form('我的微信'),synthetic:bool=Form(False),reference_date:Date|None=Form(None)):
     if platform not in ['微信','支付宝']:raise HTTPException(400,'仅支持微信和支付宝')
     if not account.strip():raise HTTPException(400,'请填写本人账户别名')
     if len(files)>20:raise HTTPException(400,'每批最多20个文件')
@@ -135,7 +136,7 @@ async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微�
             if suffix in ['.csv','.xlsx']:
                 rs,es=parse_table(content,filename,platform,account)
             elif suffix in ['.png','.jpg','.jpeg']:
-                rs,es,ocr_text,score=parse_image(content,filename,platform,account)
+                rs,es,ocr_text,score=parse_image(content,filename,platform,account,reference_date)
                 extra.setdefault('ocr',[]).append(dict(file=filename,text=ocr_text,confidence=score))
                 # OCR结果均需人工确认，不能把识别置信度当成账务正确率。
                 for r in rs:r['ocr_review_required']=True

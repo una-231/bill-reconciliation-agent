@@ -186,7 +186,10 @@ def run_job(id:str):
     if not db.all_items('transactions',id):raise ValueError('本批没有新增可处理记录；请查看错误列表或已有账本')
     with LOCK:
         if job['status']=='review':
-            return job
+            if any(q['status']=='open' for q in db.all_items('reviews',id)):
+                return job
+            run(id,resume=True)
+            return require('jobs',id)
         try:
             run(id)
         except Exception as e:
@@ -283,10 +286,20 @@ def _answer_once(id:str,body:ReviewAnswer):
 def answer(id:str,body:ReviewAnswer):
     with LOCK:
         result=_answer_once(id,body)
-        job_id=result['event']['job_id']
-        if not any(x['status']=='open' for x in db.all_items('reviews',job_id)):
-            run(job_id,resume=True)
+        affected={r['job_id'] for r in result['event']['after']['transactions'].values()}
+        for job_id in sorted(affected):
+            sync_review_job(job_id)
         return result
+
+
+def sync_review_job(job_id):
+    job=require('jobs',job_id)
+    pending=any(q['status']=='open' for q in db.all_items('reviews',job_id))
+    if pending:
+        if job['status']=='complete':
+            job['status']='review';db.save('jobs',job)
+    elif job['status']=='review':
+        run(job_id,resume=True)
 
 
 @app.patch('/api/ledger/{id}')
@@ -317,22 +330,22 @@ def events(job_id:str|None=None):
 
 @app.post('/api/events/{id}/undo')
 def undo(id:str):
-    with LOCK,db.atomic():
-        e=require('events',id)
-        if e['undone']:raise HTTPException(409,'该修改已撤销')
-        for tx_id,after in e['after']['transactions'].items():
-            if require('transactions',tx_id)!=after:raise HTTPException(409,'记录已有后续修改，请先撤销后续修改')
-        for r in e['before']['transactions'].values():db.save('transactions',r,r['job_id'])
-        for q in e['before']['reviews'].values():db.save('reviews',q)
-        with db.connect() as c:
-            for tx_id,r in e['before']['transactions'].items():
-                c.execute('DELETE FROM feedback WHERE tx_id=?',(tx_id,))
-                if r.get('user_confirmed') and r.get('category') in CATEGORIES:
-                    c.execute('INSERT OR REPLACE INTO feedback VALUES(?,?,?,?)',(tx_id,tx_id,text_of(r),r['category']))
-        e['undone']=True;db.save('events',e)
-        job=require('jobs',e['job_id'])
-        if any(q['status']=='open' for q in db.all_items('reviews',e['job_id'])):
-            job['status']='review';db.save('jobs',job)
+    with LOCK:
+        with db.atomic():
+            e=require('events',id)
+            if e['undone']:raise HTTPException(409,'该修改已撤销')
+            for tx_id,after in e['after']['transactions'].items():
+                if require('transactions',tx_id)!=after:raise HTTPException(409,'记录已有后续修改，请先撤销后续修改')
+            for r in e['before']['transactions'].values():db.save('transactions',r,r['job_id'])
+            for q in e['before']['reviews'].values():db.save('reviews',q)
+            with db.connect() as c:
+                for tx_id,r in e['before']['transactions'].items():
+                    c.execute('DELETE FROM feedback WHERE tx_id=?',(tx_id,))
+                    if r.get('user_confirmed') and r.get('category') in CATEGORIES:
+                        c.execute('INSERT OR REPLACE INTO feedback VALUES(?,?,?,?)',(tx_id,tx_id,text_of(r),r['category']))
+            e['undone']=True;db.save('events',e)
+        for job_id in {r['job_id'] for r in e['before']['transactions'].values()}:
+            sync_review_job(job_id)
         return {'undone':True}
 
 

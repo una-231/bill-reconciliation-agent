@@ -28,9 +28,12 @@ def classify(rows):
     if not rows:
         return []
     b = bundle()
-    probs = b['classifier'].predict_proba([text_of(r) for r in rows])
-    classes = b['classifier'].classes_
-    return [(str(classes[int(p.argmax())]),float(p.max())) for p in probs]
+    model=b['classifier']
+    features=model[:-1].transform([text_of(r) for r in rows])
+    probs=model.steps[-1][1].predict_proba(features)
+    classes=model.classes_
+    return [('其他',0.0) if features.getrow(i).nnz==0 else
+        (str(classes[int(p.argmax())]),float(p.max())) for i,p in enumerate(probs)]
 
 
 def pair_features(a,b):

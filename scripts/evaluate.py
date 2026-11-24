@@ -88,7 +88,9 @@ def evaluate():
     api_path=ROOT/'results/api_validation.json'
     api_passed=api_path.exists() and json.loads(api_path.read_text(encoding='utf-8')).get('success',False)
     result=dict(ablations=cases,simulated_human_feedback=oracle,personalization=adaptation_result,quality=quality,ocr=ocr_results,wrong_auto_links=failed,
-        api_validation='passed' if api_passed else 'pending_live_validation',real_data_validation='pending_user_authorized_sample')
+        api_validation='passed' if api_passed else 'pending_live_validation',
+        real_data_validation=dict(scope='单独的本地兼容性探针，非本构造测试集的一部分',
+            summary='results/real_sample_compatibility_summary.json',raw_samples_in_repository=False))
     (ROOT/'results/workflow_evaluation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
     pd.DataFrame(cases).drop(columns=['auto_link_by_kind']).to_csv(ROOT/'results/ablations.csv',index=False,encoding='utf-8-sig')
     print(json.dumps(result,ensure_ascii=False,indent=2))

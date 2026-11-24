@@ -1,0 +1,40 @@
+{
+  "scope": "用户授权的本地截图兼容性探针，不是独立泛化评估",
+  "sample_source": "4张用户授权截图；原图、字段明细、身份与特征文件不公开",
+  "screenshots": 4,
+  "visible_appearances": 28,
+  "includes_overlaps": true,
+  "complete_candidates": 23,
+  "withheld": 5,
+  "withheld_reasons": {
+    "ocr_amount_unreliable": 1,
+    "cropped_time": 4
+  },
+  "checked_fields": [
+    "金额",
+    "时间"
+  ],
+  "check_basis": "助手对照原图转录；不等于用户提供分类真值",
+  "amount_time_checks_correct": 23,
+  "numeric_feature_shape": [
+    28,
+    26
+  ],
+  "tfidf_shape": [
+    28,
+    3567
+  ],
+  "preprocessed_text_oov": 11,
+  "date_context_supplied": true,
+  "external_api_calls": 0,
+  "trained_on_real_samples": false,
+  "real_classification_f1": null,
+  "real_matching_accuracy": null,
+  "limitations": [
+    "同批样例用于发现和修复缺陷，不能当作独立测试集",
+    "截图不覆盖完整月份，不能与页面月汇总强行对账",
+    "候选包含截图重叠，不能将23解释为23笔独立消费",
+    "交易类别和关联关系仍需用户确认"
+  ],
+  "verified_on": "2026-11-20"
+}

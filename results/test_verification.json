@@ -1,9 +1,9 @@
 {
-  "command": "python -m pytest -q",
-  "passed": 60,
+  "command": "python -m pytest -q --tb=short",
+  "passed": 67,
   "failed": 0,
-  "seconds": 8.9,
+  "seconds": 9.65,
   "frontend_build": "npm run build passed",
-  "note": "本轮实际运行60项回归测试通过，包含截图特征、缺失字段和匹配边界；PyCharm早期截图为31项，不改写旧截图。前端未修改，构建沿用前次截图入口验收记录。",
-  "verified_on": "2026-11-20"
+  "verified_on": "2026-11-25",
+  "note": "67项实际回归通过；新增已确认订单重复导入、跨批次确认与撤销、审计回滚及词表未覆盖文本等用例。旧PyCharm截图为31项，未改写历史截图。"
 }

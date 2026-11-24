@@ -1,0 +1,228 @@
+{
+  "synthetic": true,
+  "verified_on": "2026-11-25",
+  "operator": "脚本按预先声明的构造场景执行核对，不是真实用户研究",
+  "summary": {
+    "count": 65,
+    "confirmed": 60,
+    "pending": 0,
+    "excluded": 5,
+    "expense": 669100,
+    "refund": 4300,
+    "net": 664800,
+    "income": 0,
+    "categories": [
+      {
+        "name": "购物",
+        "value": 452000
+      },
+      {
+        "name": "居住缴费",
+        "value": 48100
+      },
+      {
+        "name": "教育",
+        "value": 41700
+      },
+      {
+        "name": "餐饮",
+        "value": 37600
+      },
+      {
+        "name": "娱乐",
+        "value": 28100
+      },
+      {
+        "name": "医疗",
+        "value": 26100
+      },
+      {
+        "name": "生活服务",
+        "value": 21700
+      },
+      {
+        "name": "其他",
+        "value": 4800
+      },
+      {
+        "name": "交通",
+        "value": 4700
+      }
+    ],
+    "months": [
+      {
+        "month": "2026-07",
+        "expense": 90800,
+        "refund": 0,
+        "net": 90800
+      },
+      {
+        "month": "2026-08",
+        "expense": 94800,
+        "refund": 0,
+        "net": 94800
+      },
+      {
+        "month": "2026-09",
+        "expense": 483500,
+        "refund": 4300,
+        "net": 479200
+      }
+    ],
+    "changes": [
+      {
+        "month": "2026-09",
+        "message": "2026-09 支出较上个有数据月份增长 410%，请结合账单覆盖范围核对"
+      }
+    ],
+    "history_note": "至少30条此前月份消费才启用历史异常检测；月份变化受导入覆盖范围影响"
+  },
+  "trace": [
+    {
+      "stage": "imported",
+      "message": "读取 65 条记录，0 行需补充",
+      "time": "2026-11-24T18:11:46.684786+00:00"
+    },
+    {
+      "stage": "checking",
+      "message": "数据体检完成，开始分类、匹配和历史异常检查",
+      "time": "2026-11-24T18:11:46.715079+00:00"
+    },
+    {
+      "stage": "review",
+      "message": "已生成核对建议，等待你确认不确定记录",
+      "time": "2026-11-24T18:11:48.392080+00:00"
+    },
+    {
+      "stage": "complete",
+      "message": "本批核对完成，可以导出账本和修改记录",
+      "time": "2026-11-24T18:11:48.519944+00:00"
+    }
+  ],
+  "decisions": [
+    {
+      "question": {
+        "id": "d2ce5f4f43e5ec43da7cb1f8",
+        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "tx_id": "DEMO-FRIEND",
+        "kind": "transfer",
+        "reason": "请确认是本人账户划转，还是向他人付款",
+        "options": [],
+        "status": "open",
+        "merchant": "张同学（构造）",
+        "amount": 4800,
+        "time": "2026-09-25T12:30:00"
+      },
+      "answer": {
+        "action": "keep",
+        "category": "其他"
+      },
+      "event_id": "26b78ac06abf499ea1192bb241dcbf8e"
+    },
+    {
+      "question": {
+        "id": "ea971ddb9ed98e1774f68d75",
+        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "tx_id": "DEMO-UNKNOWN",
+        "kind": "category",
+        "reason": "消费分类置信度 36%，请确认类别",
+        "options": [
+          "餐饮",
+          "交通",
+          "购物",
+          "居住缴费",
+          "医疗",
+          "教育",
+          "娱乐",
+          "生活服务",
+          "其他"
+        ],
+        "status": "open",
+        "merchant": "云间商贸（构造）",
+        "amount": 13900,
+        "time": "2026-09-25T12:30:00"
+      },
+      "answer": {
+        "action": "category",
+        "category": "购物"
+      },
+      "event_id": "0377836578854417afbf5eae720a50c6"
+    },
+    {
+      "question": {
+        "id": "67845a369a5a4e6f5d352d6e",
+        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "tx_id": "DEMO-REFUND-MISSING",
+        "kind": "refund",
+        "reason": "未找到足够确定的原订单，请选择原消费或补充账单",
+        "options": [
+          {
+            "id": "DEMO-UNUSUAL",
+            "score": 0.0008836715787733789,
+            "relation": "refund"
+          }
+        ],
+        "status": "open",
+        "merchant": "星桥超市",
+        "amount": 99900,
+        "time": "2026-09-25T12:30:00"
+      },
+      "answer": {
+        "action": "exclude"
+      },
+      "event_id": "b7a5a2a018f64a20a06b561d06a70916"
+    },
+    {
+      "question": {
+        "id": "abe94ce5dd9d3ad32364e0fa",
+        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "tx_id": "DEMO-SAME-2",
+        "kind": "duplicate",
+        "reason": "存在同额近时记录，请核对是否重复；同额不等于同订单",
+        "options": [
+          {
+            "id": "DEMO-SAME-1",
+            "score": 0.8421270912702205,
+            "relation": "duplicate"
+          }
+        ],
+        "status": "open",
+        "merchant": "拾光咖啡",
+        "amount": 2400,
+        "time": "2026-09-26T15:01:00"
+      },
+      "answer": {
+        "action": "keep"
+      },
+      "event_id": "f38b3cbb7ba041ea904fb41a027e009f"
+    },
+    {
+      "question": {
+        "id": "0f40b8f963d54a34b3893a6a",
+        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "tx_id": "DEMO-UNUSUAL",
+        "kind": "anomaly",
+        "reason": "金额为历史中位数的 91.7 倍；这只是异常提示，请确认是否为真实交易",
+        "options": [],
+        "status": "open",
+        "merchant": "远山数码（构造）",
+        "amount": 389900,
+        "time": "2026-09-25T12:30:00"
+      },
+      "answer": {
+        "action": "confirm"
+      },
+      "event_id": "b424bcccbbed4cefaedcad80191e8d01"
+    }
+  ],
+  "export_sheets": {
+    "核对后账本": 60,
+    "待核对记录": 0,
+    "排除记录": 5,
+    "全部记录": 65,
+    "修改记录": 5
+  },
+  "undo_and_reconfirm": true,
+  "external_calls": 0,
+  "export_stage": "首次核对完成后导出；随后在临时库额外验证撤销和再确认"
+}

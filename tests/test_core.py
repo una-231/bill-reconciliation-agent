@@ -280,3 +280,92 @@ def test_qwen_non_thinking_payload_and_usage(client,monkeypatch):
     monkeypatch.setattr('httpx.Client.post',completed)
     assert llm.call_json([{'role':'user','content':'JSON test'}])=={'ok':True}
     assert llm.status()['calls']==1
+
+
+def test_confirmed_order_still_deduplicates_and_merges_sources():
+    a=tx('a',sources=[{'file':'first.csv'}])
+    a.update(user_confirmed=True,review_status='已核对',category='教育',confidence=1)
+    b=tx('b',order_id='a',sources=[{'file':'second.csv'}],time='2026-08-01T11:59:00')
+    rows,qs=analyze([a,b],'second-import')
+    assert rows[1]['excluded'] and rows[1]['linked_id']=='a'
+    assert rows[0]['category']=='教育' and rows[0]['user_confirmed']
+    assert rows[0]['sources']==[{'file':'first.csv'},{'file':'second.csv'}]
+    assert a['sources']==[{'file':'first.csv'}]
+    assert not any(q['tx_id']=='b' for q in qs)
+
+
+def test_confirmed_order_conflict_is_not_silently_merged():
+    a=tx('a');a.update(user_confirmed=True,review_status='已核对',category='餐饮')
+    rows,qs=analyze([a,tx('b',order_id='a',amount=6000)],'order-conflict')
+    assert not rows[1]['excluded']
+    assert any(q['kind']=='duplicate' and q['tx_id']=='b' for q in qs)
+
+
+def test_duplicate_import_persists_confirmed_source_without_reclassifying(client):
+    from backend.main import job_with_rows
+    original=tx('a',merchant='未知公司',description='扫码支付',sources=[{'file':'first.csv'}])
+    first=job_with_rows([original],[],'first')
+    client.post('/api/jobs/'+first['id']+'/run')
+    q=next(q for q in client.get('/api/reviews').json() if q['kind']=='category')
+    assert client.post('/api/reviews/'+q['id']+'/answer',json={'action':'category','category':'教育'}).status_code==200
+    repeated=tx('b',order_id='a',sources=[{'file':'second.csv'}])
+    second=job_with_rows([repeated],[],'second')
+    assert client.post('/api/jobs/'+second['id']+'/run').status_code==200
+    assert db.get('transactions','b')['excluded']
+    saved=db.get('transactions','a')
+    assert saved['category']=='教育' and saved['user_confirmed']
+    assert saved['sources']==[{'file':'first.csv'},{'file':'second.csv'}]
+
+
+def transfer_jobs(client):
+    from backend.main import job_with_rows
+    first=job_with_rows([tx('left',kind='转账',merchant='我的支付宝')],[],'left')
+    client.post('/api/jobs/'+first['id']+'/run')
+    second=job_with_rows([tx('right',platform='支付宝',account='我的支付宝',kind='转账',direction='收入',merchant='我的微信')],[],'right')
+    client.post('/api/jobs/'+second['id']+'/run')
+    return first,second
+
+
+def test_cross_batch_transfer_completes_both_jobs_and_undo_reopens_both(client):
+    first,second=transfer_jobs(client)
+    q=next(q for q in client.get('/api/reviews').json() if q['tx_id']=='right')
+    result=client.post('/api/reviews/'+q['id']+'/answer',json={'action':'link','target_id':'left'})
+    assert result.status_code==200
+    assert all(client.get('/api/jobs/'+j['id']).json()['status']=='complete' for j in [first,second])
+    assert client.get('/api/reviews').json()==[]
+    assert client.post('/api/events/'+result.json()['event']['id']+'/undo').status_code==200
+    assert all(client.get('/api/jobs/'+j['id']).json()['status']=='review' for j in [first,second])
+    assert len(client.get('/api/reviews').json())==2
+    q=next(q for q in client.get('/api/reviews').json() if q['tx_id']=='left')
+    assert client.post('/api/reviews/'+q['id']+'/answer',json={'action':'link','target_id':'right'}).status_code==200
+    assert all(client.get('/api/jobs/'+j['id']).json()['status']=='complete' for j in [first,second])
+
+
+def test_run_recovers_stale_review_job_with_no_open_questions(client):
+    from backend.main import job_with_rows
+    j=job_with_rows([tx('a',kind='转账',merchant='同学')],[],'stale')
+    client.post('/api/jobs/'+j['id']+'/run')
+    for q in db.all_items('reviews',j['id']):
+        q['status']='closed';db.save('reviews',q)
+    assert client.post('/api/jobs/'+j['id']+'/run').json()['status']=='complete'
+
+
+def test_unseen_text_requests_review_instead_of_using_class_prior():
+    from backend.ml import classify
+    unknown=tx('oov',merchant='龘靐齉',description='')
+    assert classify([unknown])==[('其他',0.0)]
+    rows,qs=analyze([unknown],'oov')
+    assert rows[0]['review_status']=='待核对'
+    assert any(q['kind']=='category' and '词表' in q['reason'] for q in qs)
+
+
+def test_cross_batch_audit_failure_rolls_back_before_job_sync(client,monkeypatch):
+    first,second=transfer_jobs(client)
+    q=next(q for q in client.get('/api/reviews').json() if q['tx_id']=='right')
+    before=[db.get('transactions',id) for id in ['left','right']]
+    def failed(*args,**kwargs):raise ValueError('模拟审计失败')
+    monkeypatch.setattr(db,'event',failed)
+    assert client.post('/api/reviews/'+q['id']+'/answer',json={'action':'link','target_id':'left'}).status_code==400
+    assert [db.get('transactions',id) for id in ['left','right']]==before
+    assert len(client.get('/api/reviews').json())==2
+    assert all(client.get('/api/jobs/'+j['id']).json()['status']=='review' for j in [first,second])

@@ -2,7 +2,7 @@
   "ablations": [
     {
       "variant": "原始收支+模型分类",
-      "seconds": 0.3839852998498827,
+      "seconds": 0.3980996999889612,
       "records": 572,
       "review_questions": 0,
       "review_request_rate": 0.0,
@@ -30,7 +30,7 @@
     },
     {
       "variant": "匹配但无人工核对",
-      "seconds": 0.4486775998957455,
+      "seconds": 0.49107340001501143,
       "records": 572,
       "review_questions": 0,
       "review_request_rate": 0.0,
@@ -58,7 +58,7 @@
     },
     {
       "variant": "完整流程",
-      "seconds": 0.49278339999727905,
+      "seconds": 0.4866078000050038,
       "records": 572,
       "review_questions": 50,
       "review_request_rate": 0.08741258741258741,
@@ -86,7 +86,7 @@
     },
     {
       "variant": "关闭数据体检",
-      "seconds": 0.5495950998738408,
+      "seconds": 0.47933240002021194,
       "records": 572,
       "review_questions": 50,
       "review_request_rate": 0.08741258741258741,
@@ -183,7 +183,7 @@
       "errors": 0,
       "min_confidence": 0.95575,
       "text": "构造账单测试图 图(非真实支付截图)\n2026-09-08 12:30 青禾面馆 支出 28.00元\n2026-09-08 18:00 城市地铁 支出 6.00元\n2026-09-09 10:20 知行书店 支出 68.00元",
-      "seconds": 2.8469670000486076
+      "seconds": 2.696854500041809
     },
     {
       "file": "demo_screenshot_blurred.png",
@@ -195,10 +195,15 @@
       "errors": 0,
       "min_confidence": 0.94694,
       "text": "构造账单测试图(非真实支付截图）\n2026-09-0812:30 青禾面馆 支出 28.00元\n2026-09-0818:00 城市地铁 支出6.00元\n2026-09-0910:20知行书店支出68.00元",
-      "seconds": 1.597368200076744
+      "seconds": 1.1467683000373654
     }
   ],
   "wrong_auto_links": [],
   "api_validation": "passed",
-  "real_data_validation": "pending_user_authorized_sample"
+  "real_data_validation": {
+    "scope": "独立于构造评估的本地兼容性探针",
+    "summary": "results/real_sample_compatibility_summary.json",
+    "raw_samples_in_repository": false
+  },
+  "rerun_on": "2026-11-25"
 }

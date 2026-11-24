@@ -1,0 +1,15 @@
+{
+  "verified_on": "2026-11-25",
+  "required_files_checked": 22,
+  "tracked_files_checked": 103,
+  "missing_files": [],
+  "broken_local_links": [],
+  "private_or_report_files_tracked": [],
+  "secret_signature_matches": [],
+  "private_paths_ignored": true,
+  "local_links_scope": "项目编写文档；上游原文保持原样，其缺少独立LICENSE的情况已在组件清单披露",
+  "synthetic_rows": 3000,
+  "demo_rows": 65,
+  "demo_net_cents": 664800,
+  "regression_tests": 67
+}

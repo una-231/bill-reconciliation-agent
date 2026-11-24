@@ -18,7 +18,11 @@ def analyze(records, job_id, use_matching=True, use_review=True, use_quality=Tru
     b=bundle()
     for r,(category,confidence) in zip(classify_rows,classify(classify_rows)):
         r.update(category=category,confidence=confidence)
+    # 已确认记录仍参与新导入的查重，但不改写它们的账务判断。
     seen={}
+    for r in sorted(rows,key=lambda x:x['time']):
+        if is_fixed(r) and r.get('order_id') and not r.get('excluded'):
+            seen.setdefault((r['platform'],r['account'],r['order_id']),r)
     for r in sorted(rows,key=lambda x:x['time']):
         if is_fixed(r):continue
         r.update(review_status='已核对')
@@ -37,12 +41,17 @@ def analyze(records, job_id, use_matching=True, use_review=True, use_quality=Tru
             target=seen[key]
             if (r['amount'],r['direction'],r['kind'])==(target['amount'],target['direction'],target['kind']):
                 r.update(excluded=True,linked_id=target['id'],exclusion_reason='同账户同订单重复记录')
+                target['sources']=list(target.get('sources',[]))
+                for source in r.get('sources',[]):
+                    if source not in target['sources']:target['sources'].append(source)
+                reviews[:]=[q for q in reviews if q['tx_id']!=r['id']]
                 continue
             ask(r,'duplicate','同订单号出现不同金额或方向，不能自动合并',[dict(id=target['id'],score=1)])
         else:
             seen[key]=r
         if r['direction']=='支出' and r['kind']=='消费' and r.get('confidence',0)<b['category_threshold']:
-            ask(r,'category',f'消费分类置信度 {r.get("confidence",0):.0%}，请确认类别',CATEGORIES)
+            reason='交易文本未命中训练词表，请确认类别' if r.get('confidence',0)==0 else f'消费分类置信度 {r.get("confidence",0):.0%}，请确认类别'
+            ask(r,'category',reason,CATEGORIES)
         if r['kind']=='转账' and not use_matching:
             # 消融时采用原始收支口径。
             continue

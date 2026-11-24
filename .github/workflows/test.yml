@@ -12,6 +12,8 @@ jobs:
       - run: pip install -r requirements-lock.txt
       - run: python scripts/generate_data.py && python scripts/train.py
       - run: python -m pytest -q
+      - run: python scripts/validate_demo.py
+      - run: python scripts/check_delivery.py
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

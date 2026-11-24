@@ -37,11 +37,15 @@ def reconcile_node(state):
     current=db.all_items('transactions',job_id)
     current_ids={r['id'] for r in current}
     all_rows=db.all_items('transactions')
+    original={r['id']:r for r in all_rows}
     rows,reviews=analyze(all_rows,job_id)
     # 已有账本只提供匹配上下文，新的问题仅归属当前导入批次。
     for r in rows:
         if r['id'] in current_ids:
             db.save('transactions',r,job_id)
+        elif r.get('sources')!=original[r['id']].get('sources'):
+            previous=dict(original[r['id']],sources=r['sources'])
+            db.save('transactions',previous,previous['job_id'])
     for q in reviews:
         if q['tx_id'] in current_ids:db.save('reviews',q)
     update(job_id,'review','已生成核对建议，等待你确认不确定记录')

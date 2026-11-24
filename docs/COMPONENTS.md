@@ -2,19 +2,19 @@
 
 精确Python依赖版本见requirements-lock.txt，前端依赖见frontend/package-lock.json。OCR模型名及推理行为见results/workflow_evaluation.json与本机运行日志。
 
-|组件|来源|许可证或服务条款|用途与归属|
-|---|---|---|---|
-|LangGraph及SQLite检查点|https://github.com/langchain-ai/langgraph|MIT|复用图执行与中断机制，节点、状态和核对语义自行实现|
-|scikit-learn|https://github.com/scikit-learn/scikit-learn|BSD-3-Clause|复用TF-IDF、NB、逻辑回归、IsolationForest与指标；自行设计特征、划分及评估|
-|RapidOCR|https://github.com/RapidAI/RapidOCR|Apache-2.0；模型许可随上游|复用本地OCR；自行合并坐标文本、解析账单并强制复核|
-|ONNX Runtime|https://github.com/microsoft/onnxruntime|MIT|CPU OCR推理|
-|pandas / openpyxl|https://github.com/pandas-dev/pandas / https://openpyxl.readthedocs.io/|BSD-3-Clause / MIT|读写表格，字段适配和账务口径自行实现|
-|FastAPI / Pydantic|https://github.com/fastapi/fastapi / https://github.com/pydantic/pydantic|MIT|接口与结构化校验|
-|React / Vite / TypeScript|https://react.dev/ / https://vite.dev/ / https://www.typescriptlang.org/|MIT / MIT / Apache-2.0|界面基础设施，页面与交互自行实现|
-|Lucide / Recharts|https://lucide.dev/ / https://recharts.org/|ISC / MIT|图标及趋势图|
-|CSV Data Summarizer 2.1.0|https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill|上游README声明MIT，无单独LICENSE|审阅并适配其数据体检工作流；上游原文件仅保留供核查|
-|Qwen兼容API，本次验证qwen3.7-flash|用户在本地配置的服务；参数参考https://help.aliyun.com/zh/model-studio/|服务商API服务条款，不把API等同本地开源权重|文字结构化和对话；未复制模型权重，保留实际返回模型ID与usage|
-|公开构造账单|scripts/generate_data.py、scripts/make_demo.py|CC0-1.0|本项目自行生成，无真实用户账单|
+|组件|版本或标识|来源|许可证或服务条款|用途与归属|
+|---|---|---|---|---|
+|LangGraph及SQLite检查点|1.2.20 / 3.1.3|https://github.com/langchain-ai/langgraph|MIT|复用图执行与中断机制，节点、状态和核对语义自行实现|
+|scikit-learn|1.9.1|https://github.com/scikit-learn/scikit-learn|BSD-3-Clause|复用TF-IDF、NB、逻辑回归、IsolationForest与指标；自行设计特征、划分及评估|
+|RapidOCR|3.10.0|https://github.com/RapidAI/RapidOCR|Apache-2.0；模型许可随上游|复用本地OCR；自行合并坐标文本、解析账单并强制复核|
+|ONNX Runtime|1.31.1|https://github.com/microsoft/onnxruntime|MIT|CPU OCR推理|
+|pandas / openpyxl|2.3.3 / 3.1.5|https://github.com/pandas-dev/pandas / https://openpyxl.readthedocs.io/|BSD-3-Clause / MIT|读写表格，字段适配和账务口径自行实现|
+|FastAPI / Pydantic|0.162.2 / 2.14.3|https://github.com/fastapi/fastapi / https://github.com/pydantic/pydantic|MIT|接口与结构化校验|
+|React / Vite / TypeScript|19.3.1 / 6.4.6 / 5.8.3|https://react.dev/ / https://vite.dev/ / https://www.typescriptlang.org/|MIT / MIT / Apache-2.0|界面基础设施，页面与交互自行实现|
+|Lucide / Recharts|0.468.0 / 3.10.1|https://lucide.dev/ / https://recharts.org/|ISC / MIT|图标及趋势图|
+|CSV Data Summarizer 2.1.0|2.1.0；固定提交见下文|https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill|上游README声明MIT，无单独LICENSE|审阅并适配其数据体检工作流；上游原文件仅保留供核查|
+|Qwen兼容API，本次验证qwen3.7-flash|历史响应模型ID：qwen3.7-flash|用户在本地配置的服务；参数参考https://help.aliyun.com/zh/model-studio/|服务商API服务条款，不把API等同本地开源权重|文字结构化和对话；未复制模型权重，保留实际返回模型ID与usage|
+|公开构造账单|固定种子20261110|scripts/generate_data.py、scripts/make_demo.py|CC0-1.0|本项目自行生成，无真实用户账单|
 
 ## 深入核验的 Skill
 

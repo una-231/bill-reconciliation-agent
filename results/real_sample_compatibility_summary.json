@@ -36,5 +36,17 @@
     "候选包含截图重叠，不能将23解释为23笔独立消费",
     "交易类别和关联关系仍需用户确认"
   ],
-  "verified_on": "2026-11-20"
+  "verified_on": "2026-11-20",
+  "screenshot_draft_validation": {
+    "verified_on": "2026-11-25",
+    "automatic_complete_candidates": 23,
+    "manually_corrected_amount": 1,
+    "candidates_after_manual_correction": 24,
+    "cropped_time_held": 4,
+    "original_image_preview": true,
+    "draft_persistence": true,
+    "idempotent_commit": true,
+    "external_api_calls": 0,
+    "scope": "同批样例本地兼容性与字段人工补改验证；包含截图重叠，不是独立分类或匹配评估"
+  }
 }

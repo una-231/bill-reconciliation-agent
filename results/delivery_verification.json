@@ -1,7 +1,7 @@
 {
   "verified_on": "2026-11-25",
   "required_files_checked": 22,
-  "tracked_files_checked": 103,
+  "tracked_files_checked": 111,
   "missing_files": [],
   "broken_local_links": [],
   "private_or_report_files_tracked": [],
@@ -11,5 +11,5 @@
   "synthetic_rows": 3000,
   "demo_rows": 65,
   "demo_net_cents": 664800,
-  "regression_tests": 67
+  "regression_tests": 81
 }

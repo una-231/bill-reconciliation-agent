@@ -100,3 +100,20 @@ class NoteCommit(BaseModel):
     revision: int = Field(ge=1)
     acknowledge_questions: bool = False
     items: list[NoteEntry] = Field(min_length=1, max_length=10)
+
+
+class ScreenshotEdit(BaseModel):
+    id: str
+    fields: NoteEntry
+    reviewed: bool = False
+    held: bool = False
+
+
+class ScreenshotSave(BaseModel):
+    revision: int = Field(ge=1)
+    items: list[ScreenshotEdit] = Field(min_length=1, max_length=500)
+
+
+class ScreenshotCommit(BaseModel):
+    revision: int = Field(ge=1)
+    ids: list[str] = Field(min_length=1, max_length=500)

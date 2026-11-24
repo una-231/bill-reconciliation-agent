@@ -1,0 +1,31 @@
+{
+  "verified_on": "2026-11-25",
+  "input": "data/demo_screenshot.png",
+  "synthetic": true,
+  "rows": 3,
+  "workflow": [
+    "浏览器上传截图",
+    "对照原图编辑商户",
+    "保存草稿",
+    "刷新恢复",
+    "暂缓1条后分两批确认入账",
+    "人工纠正低置信度分类",
+    "导出XLSX"
+  ],
+  "confirmed": 3,
+  "pending": 0,
+  "net_cents": 10200,
+  "export_sheets": {
+    "核对后账本": 3,
+    "待核对记录": 0,
+    "排除记录": 0,
+    "全部记录": 3,
+    "修改记录": 1
+  },
+  "screenshots": [
+    "docs/screenshots/10_截图字段核对.jpg",
+    "docs/screenshots/11_截图核对后账本.jpg"
+  ],
+  "external_api_calls": 0,
+  "database_isolated": true
+}

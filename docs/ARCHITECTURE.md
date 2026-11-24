@@ -33,7 +33,10 @@ flowchart LR
 |接口|输入|输出与用途|
 |---|---|---|
 |GET /api/config|无|模型版本、密钥是否就绪、费用；不返回密钥|
-|POST /api/import/files|multipart文件、platform、account、synthetic|任务、错误行、OCR原文或待映射列|
+|POST /api/import/files|multipart文件、platform、account、synthetic、reference_date、defer_images|文件任务或截图核对草稿|
+|GET /api/jobs/{id}/images/{token}|本批次原图token|本机原图，禁止缓存|
+|PATCH /api/jobs/{id}/screenshots|revision、字段草稿与确认/暂缓状态|保存可恢复的截图草稿，冲突返回409|
+|POST /api/jobs/{id}/screenshots/commit|revision、已逐条确认的草稿ID|校验并幂等入账，返回后续核对任务|
 |POST /api/import/text|标准格式text、platform、account、synthetic|兼容旧客户端的本地文字导入，不自动调用API|
 |POST /api/notes/preview|text、reference_date、allow_remote，可选draft_id/revision/items|模型或本地随记草稿、待补问题，不写账本|
 |GET /api/notes/{id}|草稿ID|恢复草稿与原文|
@@ -64,3 +67,7 @@ ReviewAnswer的action只允许confirm、category、link、keep、exclude；退�
 `backend/notes.py`把非标准口语转换成受约束的NoteEntry，Pydantic与Decimal检查金额、日期、方向和类型。模型只能返回结构化草稿，无执行工具或修改账本权限。用户允许后发送原文与补充，未授权时仅本地解析；synthetic标记不会代替发送许可。外部请求受输入长度、最大输出及预算约束；补充最多5轮、单次最多10笔。
 
 SQLite的notes表保存原文对话、模型草稿、修订号和确认结果；浏览器缓存尚未提交的字段编辑。并发补充检查版本；确认入账与任务创建共用事务，交易ID由草稿与行ID固定派生，重复确认不会新增。未填写具体时间时保留日级精度标记；退款与收入方向不一致、金额缺失等不能保存。模型仍有问题时默认阻止保存，用户手动解决后须明确确认仅保存所列交易。确认后进入既有LangGraph核对流程。
+
+## 截图核对草稿
+
+网页使用defer_images=true，截图解析结果先保存于jobs的screenshot_drafts字段，暂不写transactions。原图保存在本地uploads目录，只允许通过所属任务的token读取。字段修订带版本校验，缺少日期、时间、金额、商户或方向的记录不能确认。用户逐条确认后，选定草稿在同一事务中创建交易任务，保留OCR原字段、确认字段及来源；同一提交重试不新增记录。已入账草稿不可继续编辑，后续类别与关联核对仍由LangGraph完成。OCR字段已确认的记录不重复询问字段，但继续保留OCR标记以保守核对退款和跨图重叠。模型配置动态刷新只读取LLM_参数，不覆盖启动时指定的BILL_DATA_DIR。

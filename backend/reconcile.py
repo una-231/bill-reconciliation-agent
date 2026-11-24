@@ -34,7 +34,7 @@ def analyze(records, job_id, use_matching=True, use_review=True, use_quality=Tru
             ask(r,'status','交易状态尚不能确认实际收支，请核对后确认或排除')
         if use_quality and not r.get('merchant'):
             ask(r,'field','缺少交易对方，请核对原始记录')
-        if r.get('ocr_review_required'):
+        if r.get('ocr_review_required') and not r.get('ocr_fields_confirmed'):
             ask(r,'ocr','请对照原截图确认日期、金额和商户，OCR识别不能替代账务核对')
         key=(r['platform'],r['account'],r.get('order_id'))
         if use_matching and r.get('order_id') and key in seen:

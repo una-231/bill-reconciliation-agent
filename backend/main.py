@@ -9,7 +9,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 import pandas as pd
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
 from fastapi.responses import FileResponse, Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -21,10 +21,20 @@ from .reconcile import summary
 from .quality import inspect_records, SKILL
 from .ml import bundle, text_of
 from . import llm, notes
+from . import screenshots
+from .schema import ScreenshotSave, ScreenshotCommit
 from .workflow import run, LOCK
 
 ROOT=Path(__file__).resolve().parents[1]
 load_dotenv(ROOT/'.env')
+
+
+def reload_model_config():
+    # 动态刷新只更新模型参数，不覆盖启动时指定的账本目录。
+    values=dotenv_values(ROOT/'.env')
+    model_env='\n'.join(f'{key}={json.dumps(value,ensure_ascii=False)}' for key,value in values.items()
+        if key.startswith('LLM_') and value is not None)
+    load_dotenv(stream=io.StringIO(model_env),override=True,interpolate=False)
 
 
 @asynccontextmanager
@@ -73,7 +83,7 @@ def health():
 
 @app.get('/api/config')
 def config():
-    load_dotenv(ROOT/'.env',override=True)
+    reload_model_config()
     ready=(ROOT/'models/active.joblib').exists()
     return dict(llm=llm.status(),categories=CATEGORIES,model=dict(ready=ready,version=bundle()['version'] if ready else None),
         real_sample_validation=False,privacy='原始文件仅本地处理；对话发送脱敏摘要，随记解析发送输入原文，两者均须单独勾选允许。')
@@ -122,7 +132,7 @@ def commit_note(id:str,body:NoteCommit):
 
 
 @app.post('/api/import/files')
-async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微信'),account:str=Form('我的微信'),synthetic:bool=Form(False),reference_date:Date|None=Form(None)):
+async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微信'),account:str=Form('我的微信'),synthetic:bool=Form(False),reference_date:Date|None=Form(None),defer_images:bool=Form(False)):
     if platform not in ['微信','支付宝']:raise HTTPException(400,'仅支持微信和支付宝')
     if not account.strip():raise HTTPException(400,'请填写本人账户别名')
     if len(files)>20:raise HTTPException(400,'每批最多20个文件')
@@ -140,6 +150,14 @@ async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微�
                 extra.setdefault('ocr',[]).append(dict(file=filename,text=ocr_text,confidence=score))
                 # OCR结果均需人工确认，不能把识别置信度当成账务正确率。
                 for r in rs:r['ocr_review_required']=True
+                if defer_images:
+                    attachment=screenshots.image_attachment(content,filename)
+                    extra.setdefault('images',[]).append(attachment)
+                    if not rs and not es:es=[dict(row=0,error='未识别到交易，请对照原图补充字段',raw={'ocr_block':ocr_text})]
+                    extra.setdefault('screenshot_drafts',[]).extend(screenshots.make_drafts(rs,es,attachment,platform,account,ocr_text,reference_date))
+                    extra['screenshot_revision']=1
+                    errors.extend([dict(file=filename,**e) for e in es])
+                    continue
             else:raise ValueError('仅支持CSV、XLSX、PNG和JPG文件')
             rows.extend(rs);errors.extend([dict(file=filename,**e) for e in es])
         except MappingRequired as e:
@@ -150,7 +168,73 @@ async def import_files(files:list[UploadFile]=File(...),platform:str=Form('微�
         except Exception as e:
             errors.append(dict(file=filename,error=str(e)))
     extra['mapping_required']=needs_mapping
-    return job_with_rows(rows,errors,' / '.join(Path(f.filename or '账单').name for f in files),synthetic,extra)
+    if extra.get('screenshot_drafts'):
+        extra['screenshot_drafts']=list({d['id']:d for d in extra['screenshot_drafts']}.values())
+    job=job_with_rows(rows,errors,' / '.join(Path(f.filename or '账单').name for f in files),synthetic,extra)
+    if extra.get('screenshot_drafts'):
+        job['status']='image_review'
+        job['trace'].append(dict(stage='image_review',message=f'识别出{len(extra["screenshot_drafts"])}条截图草稿，等待核对字段',time=db.now()))
+        db.save('jobs',job)
+    return job
+
+
+@app.get('/api/jobs/{id}/images/{token}')
+def screenshot_image(id:str,token:str):
+    job=require('jobs',id)
+    image=next((v for v in job.get('images',[]) if v['token']==token),None)
+    if image is None or not re_full_image_token(token):raise HTTPException(404,'图片不存在')
+    path=db.data_dir()/'uploads'/token
+    if not path.is_file():raise HTTPException(404,'原图文件不存在，请重新上传')
+    return FileResponse(path,headers={'Cache-Control':'no-store'})
+
+
+def re_full_image_token(token):
+    import re
+    return re.fullmatch(r'[a-f0-9]{64}\.(?:png|jpg|jpeg)',token)
+
+
+@app.patch('/api/jobs/{id}/screenshots')
+def save_screenshots(id:str,body:ScreenshotSave):
+    with LOCK,db.atomic():
+        job=require('jobs',id)
+        if body.revision!=job.get('screenshot_revision'):raise HTTPException(409,'截图草稿已更新，请重新打开后核对')
+        lookup={d['id']:d for d in job.get('screenshot_drafts',[])}
+        if len({x.id for x in body.items})!=len(body.items):raise ValueError('草稿记录不能重复')
+        for item in body.items:
+            draft=lookup.get(item.id)
+            if not draft:raise ValueError('截图草稿不存在')
+            if draft['status']=='imported':raise ValueError('已入账记录请在交易明细中核对')
+            if item.fields.id!=item.id:raise ValueError('草稿ID不一致')
+            draft.update(fields=item.fields.model_dump(mode='json'),reviewed=item.reviewed and not item.held,
+                status='held' if item.held else 'pending')
+            if draft['reviewed']:screenshots.checked_transaction(draft)
+        job['screenshot_revision']+=1
+        db.save('jobs',job)
+        return job
+
+
+@app.post('/api/jobs/{id}/screenshots/commit')
+def commit_screenshots(id:str,body:ScreenshotCommit):
+    with LOCK,db.atomic():
+        job=require('jobs',id)
+        lookup={d['id']:d for d in job.get('screenshot_drafts',[])}
+        if len(set(body.ids))!=len(body.ids) or any(i not in lookup for i in body.ids):raise ValueError('请选择有效且不重复的截图草稿')
+        selected=[lookup[i] for i in body.ids]
+        # 重试相同批次只返回已有入账任务。
+        if all(d['status']=='imported' for d in selected):
+            children={d['committed_job_id'] for d in selected}
+            if len(children)==1:return require('jobs',children.pop())
+            raise HTTPException(409,'所选记录已分批入账，请刷新查看')
+        if body.revision!=job.get('screenshot_revision'):raise HTTPException(409,'截图草稿已更新，请重新打开后核对')
+        if any(d['status']!='pending' or not d['reviewed'] for d in selected):raise ValueError('请先逐条确认截图字段；暂缓或已入账记录不能重复提交')
+        rows=[screenshots.checked_transaction(d) for d in selected]
+        child=job_with_rows(rows,[],'截图确认 · '+job['name'],job['synthetic'],dict(screenshot_parent_id=id))
+        for d in selected:d.update(status='imported',committed_job_id=child['id'],committed_at=db.now())
+        job['screenshot_revision']+=1
+        job['status']='image_review' if any(d['status']!='imported' for d in lookup.values()) else 'image_complete'
+        job['trace'].append(dict(stage='screenshot_confirmed',message=f'确认{len(rows)}条截图草稿，新增{child["imported"]}条交易',time=db.now()))
+        db.save('jobs',job)
+        return child
 
 
 @app.post('/api/jobs/{id}/mapping/{token}')
@@ -388,7 +472,7 @@ def export(format:str='xlsx',job_id:str|None=None):
 
 @app.post('/api/chat')
 def chat(body:ChatInput):
-    load_dotenv(ROOT/'.env',override=True)
+    reload_model_config()
     rows=db.all_items('transactions');s=summary(rows)
     qs=[q for q in db.all_items('reviews') if q['status']=='open']
     msg=body.message

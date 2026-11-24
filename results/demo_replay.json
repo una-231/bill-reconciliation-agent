@@ -81,29 +81,29 @@
     {
       "stage": "imported",
       "message": "读取 65 条记录，0 行需补充",
-      "time": "2026-11-24T18:11:46.684786+00:00"
+      "time": "2026-11-24T19:59:26.749087+00:00"
     },
     {
       "stage": "checking",
       "message": "数据体检完成，开始分类、匹配和历史异常检查",
-      "time": "2026-11-24T18:11:46.715079+00:00"
+      "time": "2026-11-24T19:59:26.778309+00:00"
     },
     {
       "stage": "review",
       "message": "已生成核对建议，等待你确认不确定记录",
-      "time": "2026-11-24T18:11:48.392080+00:00"
+      "time": "2026-11-24T19:59:28.487165+00:00"
     },
     {
       "stage": "complete",
       "message": "本批核对完成，可以导出账本和修改记录",
-      "time": "2026-11-24T18:11:48.519944+00:00"
+      "time": "2026-11-24T19:59:28.641625+00:00"
     }
   ],
   "decisions": [
     {
       "question": {
-        "id": "d2ce5f4f43e5ec43da7cb1f8",
-        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "id": "cf4ad217757c03e2f52a5bd3",
+        "job_id": "a4b7ebf14de1472ca8247be3bf559e68",
         "tx_id": "DEMO-FRIEND",
         "kind": "transfer",
         "reason": "请确认是本人账户划转，还是向他人付款",
@@ -117,12 +117,12 @@
         "action": "keep",
         "category": "其他"
       },
-      "event_id": "26b78ac06abf499ea1192bb241dcbf8e"
+      "event_id": "ddee12fe673e4d00a05cd2514114f587"
     },
     {
       "question": {
-        "id": "ea971ddb9ed98e1774f68d75",
-        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "id": "ae61b4d448f736894ddcf840",
+        "job_id": "a4b7ebf14de1472ca8247be3bf559e68",
         "tx_id": "DEMO-UNKNOWN",
         "kind": "category",
         "reason": "消费分类置信度 36%，请确认类别",
@@ -146,12 +146,12 @@
         "action": "category",
         "category": "购物"
       },
-      "event_id": "0377836578854417afbf5eae720a50c6"
+      "event_id": "a0e7c014eb39487794948111f157aa7e"
     },
     {
       "question": {
-        "id": "67845a369a5a4e6f5d352d6e",
-        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "id": "9920cf801bdb0157ad8bc03c",
+        "job_id": "a4b7ebf14de1472ca8247be3bf559e68",
         "tx_id": "DEMO-REFUND-MISSING",
         "kind": "refund",
         "reason": "未找到足够确定的原订单，请选择原消费或补充账单",
@@ -170,12 +170,12 @@
       "answer": {
         "action": "exclude"
       },
-      "event_id": "b7a5a2a018f64a20a06b561d06a70916"
+      "event_id": "076d2aec24ef4525a97d0a8c520e8eaf"
     },
     {
       "question": {
-        "id": "abe94ce5dd9d3ad32364e0fa",
-        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "id": "1340f7eefc09f99d09028a1e",
+        "job_id": "a4b7ebf14de1472ca8247be3bf559e68",
         "tx_id": "DEMO-SAME-2",
         "kind": "duplicate",
         "reason": "存在同额近时记录，请核对是否重复；同额不等于同订单",
@@ -194,12 +194,12 @@
       "answer": {
         "action": "keep"
       },
-      "event_id": "f38b3cbb7ba041ea904fb41a027e009f"
+      "event_id": "741a77a6120e475e9d322104ba20503b"
     },
     {
       "question": {
-        "id": "0f40b8f963d54a34b3893a6a",
-        "job_id": "a40fbcc76d064257b66b4a97e53f8266",
+        "id": "8a6d110db09b11d4e1b2a365",
+        "job_id": "a4b7ebf14de1472ca8247be3bf559e68",
         "tx_id": "DEMO-UNUSUAL",
         "kind": "anomaly",
         "reason": "金额为历史中位数的 91.7 倍；这只是异常提示，请确认是否为真实交易",
@@ -212,7 +212,7 @@
       "answer": {
         "action": "confirm"
       },
-      "event_id": "b424bcccbbed4cefaedcad80191e8d01"
+      "event_id": "c2f84fa6d97b4fa892576d8d90eb25cc"
     }
   ],
   "export_sheets": {

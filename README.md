@@ -12,14 +12,15 @@
 |---|---|
 |源码与可运行原型|当前仓库；按下方步骤在本机运行，入口为 `run.py`，Windows可用 `start.ps1`|
 |演示材料|[三分钟演示路线](docs/DEMO.md)、[运行截图](docs/screenshots/)、[实际导出账本](docs/demo_核对后账本.xlsx)|
+|截图上传演示|[截图草稿与字段补改](docs/SCREENSHOTS.md)、[截图演示导出](docs/demo_screenshot_核对后账本.xlsx)|
 |实验与失败案例|[实验说明](docs/EVALUATION.md)、[机器可读指标](results/metrics.json)、[工作流对照](results/workflow_evaluation.json)|
 |复用组件|[版本、来源、许可及Skill行为核验](docs/COMPONENTS.md)|
 |回归与演示复验|[测试记录](results/test_verification.json)、[65条构造账单完整复验](results/demo_replay.json)|
 |授权真实样例|[仅含汇总的兼容性说明](results/real_sample_compatibility_summary.json)；原图和逐笔数据不公开|
 
-报告PDF及Word单独在本地提交，不存放于GitHub。固定交付版本为 [course-20261125](https://github.com/una-231/bill-reconciliation-agent/tree/course-20261125)，可[下载该版本源码](https://github.com/una-231/bill-reconciliation-agent/archive/refs/tags/course-20261125.zip)。
+报告PDF及Word单独在本地提交，不存放于GitHub。固定交付版本为 [course-20261125-screenshots](https://github.com/una-231/bill-reconciliation-agent/tree/course-20261125-screenshots)，可[下载该版本源码](https://github.com/una-231/bill-reconciliation-agent/archive/refs/tags/course-20261125-screenshots.zip)。
 
-截至2026年11月25日，本机67项回归通过，前端生产构建通过。构造分类测试Macro-F1为0.9510；完整工作流自动关联82条、精确率1.0000，需核对记录比例8.74%。这些指标来自构造测试集，不能当作真实账单准确率。
+截至2026年11月25日，本机81项回归通过，前端生产构建通过。构造分类测试Macro-F1为0.9510；完整工作流自动关联82条、精确率1.0000，需核对记录比例8.74%。这些指标来自构造测试集，不能当作真实账单准确率。
 
 ## 快速运行 Windows
 
@@ -61,7 +62,7 @@ cd ..
 - 文件：微信、支付宝 CSV/XLSX；支持UTF-8、GB18030及账单说明行。未知表头可手工映射。
 - 随手记账：例如“昨天午饭花了二十八，今天支付宝打车十五块”。单独勾选允许发送原文后，由模型理解中文数字、相对日期和多笔收支，先生成可编辑草稿，支持继续补充或更正，确认后才入账。未提日期时按界面所选记账日期；金额不明时补问。无API时保留本地解析与手工填草稿，也兼容标准文字、CSV粘贴。
 - 截图：PNG/JPG，先本地OCR、再结构化；图中文字必须包含可确认的日期与金额，识别结果需人工复核。复杂详情页和缺年份列表不保证自动解析。
-- 截图未显示年份或使用“昨天”等日期时，填写实际截图拍摄日期；不同拍摄日期分批导入。截断日期、可疑金额仍需补充；当前失败行可查看原文，尚未提供逐行补改后直接回填的专用界面。
+- 截图未显示年份或使用“昨天”等日期时，填写实际截图拍摄日期；不同拍摄日期分批导入。截断日期、可疑金额仍需补充；上传后可对照原图逐行修改日期、时间、金额和商户，保存草稿、暂缓或确认入账。详见[截图核对](docs/SCREENSHOTS.md)。
 - 同批文件使用同一平台与本人账户别名；不同平台分别导入。演示按钮可一次载入双平台数据。
 - 金额使用整数分；月度净支出=当月已核对支出−当月已匹配退款。退款按实际到账月份冲减，继承原消费类别。
 - 同账户同订单且金额方向一致的记录排除重复计账，保留来源；本人账户转账须有双边证据或用户确认；转给朋友的付款不自动排除。

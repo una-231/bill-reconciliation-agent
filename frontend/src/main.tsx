@@ -41,6 +41,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import "./style.css";
+import ScreenshotReview, { ScreenshotJob } from "./ScreenshotReview";
 
 type Tx = {
   id: string;
@@ -247,6 +248,7 @@ function App() {
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [screenshotDate, setScreenshotDate] = useState("");
+  const [screenshotJob, setScreenshotJob] = useState<ScreenshotJob | null>(null);
   const [note, setNote] = useState<NoteDraft | null>(null);
   const [noteRemote, setNoteRemote] = useState(false);
   const [noteReply, setNoteReply] = useState("");
@@ -425,7 +427,7 @@ function App() {
       localStorage.setItem(noteDraftKey, draft.id);
     });
   const importData = () =>
-    action("正在导入并整理", async () => {
+    action(files.some(f => /\.(png|jpe?g)$/i.test(f.name)) ? "正在识别截图" : "正在导入并整理", async () => {
       if (!synthetic) setRemote(false);
       let j: Job;
       if (files.length) {
@@ -434,6 +436,7 @@ function App() {
         f.append("platform", platform);
         f.append("account", account);
         f.append("synthetic", String(synthetic));
+        f.append("defer_images", "true");
         if (screenshotDate) f.append("reference_date", screenshotDate);
         j = await api<Job>("/import/files", { method: "POST", body: f });
       } else {
@@ -451,10 +454,12 @@ function App() {
       setImportOpen(false);
       setFiles([]);
       clearNote();
-      setNotice(
-        `本批新增 ${j.imported} 条，已导入过 ${j.reimported} 条，需补充 ${j.errors.length} 行。`,
-      );
-      setTab(j.mapping_required?.length ? "evidence" : "overview");
+      const imageJob = j as Job & ScreenshotJob;
+      setNotice(imageJob.screenshot_drafts?.length
+        ? `已生成 ${imageJob.screenshot_drafts.length} 条截图草稿，请对照原图确认后入账。`
+        : `本批新增 ${j.imported} 条，已导入过 ${j.reimported} 条，需补充 ${j.errors.length} 行。`);
+      if (imageJob.screenshot_drafts?.length) setScreenshotJob(imageJob);
+      setTab(j.mapping_required?.length || imageJob.screenshot_drafts?.length ? "evidence" : "overview");
       if (j.imported && !j.mapping_required?.length)
         await api("/jobs/" + j.id + "/run", { method: "POST" });
     });
@@ -1243,6 +1248,8 @@ function App() {
                             complete: "已完成",
                             error: "处理失败",
                             checking: "处理中",
+                            image_review: "截图待确认",
+                            image_complete: "截图已入账",
                           } as Record<string, string>
                         )[j.status] || j.status}
                       </span>
@@ -1266,6 +1273,11 @@ function App() {
                       新增 {j.imported} 条 · 已导入过 {j.reimported} 条 ·{" "}
                       {j.synthetic ? "构造数据" : "本地私有数据"}
                     </p>
+                    {!!(j as Job & ScreenshotJob).screenshot_drafts?.length && (
+                      <button className="button secondary" onClick={() => setScreenshotJob(j as Job & ScreenshotJob)}>
+                        核对截图 · {(j as Job & ScreenshotJob).screenshot_drafts?.filter(d => d.status !== "imported").length} 条待处理
+                      </button>
+                    )}
                     <div className="timeline">
                       {j.trace.map((t, i) => (
                         <div key={i}>
@@ -1281,7 +1293,7 @@ function App() {
                     </div>
                     {j.errors.length > 0 && (
                       <details>
-                        <summary>{j.errors.length} 行需补充或修正</summary>
+                        <summary>{j.errors.length} {(j as Job & ScreenshotJob).screenshot_drafts ? "处原始识别提示" : "行需补充或修正"}</summary>
                         <pre>{JSON.stringify(j.errors, null, 2)}</pre>
                       </details>
                     )}
@@ -1512,7 +1524,7 @@ function App() {
                 ))}
                 <p className="muted">
                   完整实验指标、错误案例与消融记录保存在 results
-                  目录。真实样例尚需用户授权提供。
+                  目录。真实截图验证仅覆盖字段兼容性，不代表真实分类准确率。
                 </p>
               </section>
             </>
@@ -1631,6 +1643,11 @@ function App() {
           </footer>
         </div>
       </main>
+      {screenshotJob && <ScreenshotReview key={screenshotJob.id} job={screenshotJob} request={api}
+        onClose={() => setScreenshotJob(null)} onImported={async (child) => {
+          if (child.imported) await api("/jobs/" + child.id + "/run", { method: "POST" });
+          await refresh();
+        }} />}
       {importOpen && (
         <div className="overlay" onClick={() => !busy && setImportOpen(false)}>
           <section
@@ -2025,7 +2042,7 @@ function App() {
                 <Sparkles size={17} />
               )}
               {files.length
-                ? "导入并开始整理"
+                ? files.some(f => /\.(png|jpe?g)$/i.test(f.name)) ? "识别并核对截图" : "导入并开始整理"
                 : note
                   ? `确认这 ${note.items.length} 笔并入账`
                   : "理解并生成草稿"}
